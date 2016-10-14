@@ -1,0 +1,15 @@
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.pdb
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.dll
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.xml
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.csprojResolveAssemblyReference.cache
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\MainWindow.baml
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\MainWindow.g.cs
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\App.g.cs
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF_MarkupCompile.cache
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.g.resources
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\Microsoft.Samples.Kinect.BodyBasics.Properties.Resources.resources
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.csproj.GenerateResource.Cache
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
+C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb
