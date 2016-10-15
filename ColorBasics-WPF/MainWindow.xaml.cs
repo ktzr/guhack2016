@@ -305,7 +305,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                     dc.DrawImage(colorBitmap, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
-                    dc.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                    //dc.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
                     int penIndex = 0;
                     //dc.DrawRectangle(Brushes.DarkSeaGreen, new Pen(Brushes.Fuchsia,6.3), new Rect(45.3, 82.5, this.displayWidth, this.displayHeight));
                     //dc.DrawLine(new Pen(Brushes.Gray, 30), new Point(0, 0), new Point(200, 200));
@@ -337,8 +337,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                     case -100:
                                         spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                                         armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        Tuple<Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
+                                        Tuple<Point, Point, Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
+                                        dc.DrawLine(new Pen(Brushes.Blue, 13), drawPoints.Item3, drawPoints.Item4);
                                         dc.DrawLine(new Pen(Brushes.Gray, 13), drawPoints.Item1, drawPoints.Item2);
+                                        //dc.DrawText("start"., drawPoints.Item1);
                                         //while (true) { Console.WriteLine("i hate git"); }
                                         break;
                                     case 1:

@@ -166,7 +166,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             return -100;
         }
-        public static Tuple<Point, Point> printStartProjection(Body body, DrawingContext drawingContext)
+        public static Tuple<Point, Point, Point, Point> printStartProjection(Body body, DrawingContext drawingContext)
         {
             double startAngle = 120;
             double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft) +
@@ -176,20 +176,28 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double cos = Math.Cos((Math.PI * accuteAngle) / 180);
             //call function map from deapth space to colour space
             // then calculate dist using angle (angle can have -ve nums be carfull) 
-            ColorSpacePoint pointInColorSpace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.ShoulderLeft].Position);
+
+            //ColorSpacePoint pointInColorSpace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.ShoulderLeft].Position);
+            DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderLeft].Position);
             double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.SpineShoulder].Position).Y) - (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.SpineBase].Position).Y));
 
 
-            double projX = pointInColorSpace.X + linelenght * sin;
-            double projY = pointInColorSpace.Y + linelenght * cos;
+            double projX = pointInDepthspace.X + linelenght * sin;
+            double projY = pointInDepthspace.Y - linelenght * cos;
 
-            Point start = new Point(pointInColorSpace.X, projY);
-            Point end = new Point(projX, pointInColorSpace.Y);
-            Console.WriteLine(start);
-            Console.WriteLine(end);
+            Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y );
+            Point end = new Point(projX, projY);
+            Console.Write(start.X+" "); Console.Write(body.Joints[JointType.ShoulderLeft].Position.X + "\n");
+            Console.Write(start.Y+" "); Console.Write(body.Joints[JointType.ShoulderLeft].Position.Y + "\n");
+
+
+            Point start2 = new Point(pointInDepthspace.X, pointInDepthspace.Y);
+            Point end2 = new Point(projX, projY);
+       
+            //Console.WriteLine(end);
             Console.WriteLine("foo");
             //drawingContext.DrawLine(new Pen(Brushes.Gray, 12), start, end);
-            return Tuple.Create(start, end);
+            return Tuple.Create(start, end,start2,end2);
 
         }
         /*
