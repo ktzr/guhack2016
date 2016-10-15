@@ -95,7 +95,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// 
         public static int moveLeftArm(Body body, double tolerance)
         {
-            Boolean hasStarted;
             JointType SpineShoulder = JointType.SpineShoulder;
             JointType ShoulderLeft = JointType.ShoulderLeft;
             JointType ElbowLeft = JointType.ElbowLeft;
@@ -107,15 +106,17 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             if (!CheckBodyForm.isSpineStraight(body, tolerance))
             {
+                return -1;
                 //todo  msg strighten spine
             }
             if (!CheckBodyForm.isSraight(body, tolerance, ShoulderLeft, ElbowLeft, WristLeft))
             {
+                return -2;
                 //todo  msg strighten arm
             }
             if (!Exersise.hasStarted)
             {
-                // todo prompt go to start angle (draw box/line showing where arm should be)
+                //todo prompt go to start angle (draw box/line showing where arm should be)
 
                 if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
                 {

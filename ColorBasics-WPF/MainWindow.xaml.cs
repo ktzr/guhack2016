@@ -308,9 +308,21 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     {
 
                         //end when function returns 1
-                        exersise.moveLeftArm(body,5.1);
+                        int exersiseCode = Exersise.moveLeftArm(body,5.1);
+                        switch (exersiseCode)
+                        {
+                            case -1:
+                                //todo function fix spine
+                                break;
+                            case -2:
+                                //todo function straighten arm
+                                break;
+                            case 1:
+                                //todo end the exersise, say well done and all that good stuff
+                                break;
+                        }
 
-                     
+
                         Pen drawPen = this.bodyColors[penIndex++];
 
                         if (body.IsTracked)
