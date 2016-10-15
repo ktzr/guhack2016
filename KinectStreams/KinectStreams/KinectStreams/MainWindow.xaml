@@ -7,10 +7,6 @@
         <Canvas Name="canvas" />
         <Grid Style="{StaticResource GridButtonsStyle}">
             <StackPanel Style="{StaticResource StackPanelButtonsStyle}">
-                <Button Content="Color" Style="{StaticResource ButtonStyle}" Click="Color_Click" />
-                <Button Content="Depth" Style="{StaticResource ButtonStyle}" Click="Depth_Click" />
-                <Button Content="Infrared" Style="{StaticResource ButtonStyle}" Click="Infrared_Click" />
-                <Button Content="Body" Style="{StaticResource ButtonStyle}" Click="Body_Click" />
             </StackPanel>
         </Grid>
     </Grid>
