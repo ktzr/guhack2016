@@ -15,6 +15,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
+    using Microsoft.Kinect.Wpf.Controls;
 
     /// <summary>
     /// Interaction logic for MainWindow
