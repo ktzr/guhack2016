@@ -23,14 +23,15 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double c = lengthBetweenJoints(body, joint1, joint3);
 
             double output = Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math.PI;
+            return output;
+/*
             if (output.Equals(double.NaN))
             {
                 return 180.0;
             }
             else
             {
-                return output;
-            }
+            }*/
         }   
 
         /// <summary>
@@ -105,14 +106,24 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         ///
         public static int moveLeftArm(Body body, double tolerance)
         {
+            
             JointType SpineShoulder = JointType.SpineShoulder;
             JointType ShoulderLeft = JointType.ShoulderLeft;
             JointType ElbowLeft = JointType.ElbowLeft;
             JointType WristLeft = JointType.WristLeft;
+
+            JointType[] bodyParts = new JointType[] { SpineShoulder, ShoulderLeft, ElbowLeft, WristLeft };
             double startAngle = 120;
             double endAngle = 170; //todo let angle be reflex
 
-
+            foreach (JointType part in bodyParts)
+            {
+                if (body.Joints[part].TrackingState != TrackingState.Tracked)
+                {
+                    return 0;
+                }
+            }
+                
             if (!CheckBodyForm.isSpineStraight(body, tolerance))
             {
                 return -1;
@@ -147,7 +158,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
         public static void printStartProjection(Body body , DrawingContext drawingContext)
         {
-            double startAngle = 120;
+          double startAngle = 120;
           double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft)+
                               CheckBodyForm.lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);
           double accuteAngle = startAngle - 90.0;
