@@ -12,7 +12,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
-        /// in radians 
+        /// in radians
         /// </summary>
         public static double getAngleOfSeparation(Body body, JointType joint1, JointType joint2, JointType joint3)
         {
@@ -25,7 +25,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Calculates length between two joints. 
+        /// Calculates length between two joints.
         /// </summary>
         public static double lengthBetweenJoints(Body body, JointType joint1, JointType joint2)
         {
@@ -39,7 +39,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is 3 joints are strate within tolerance. 
+        /// Returns true is 3 joints are strate within tolerance.
         /// </summary>
         public static Boolean isSraight(Body body, double tolerance, JointType joint1, JointType joint2, JointType joint3)
         {
@@ -50,11 +50,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is 3 joints at angle, within tolerance. 
+        /// Returns true is 3 joints at angle, within tolerance.
         /// </summary>
         public static Boolean isAtAngle(Body body, double tolerance, double andgle, JointType joint1, JointType joint2, JointType joint3)
         {
-            //fix this 
+            //fix this
             // neck,spineshoulder,spineMid,spineBase
             return tolerance < Math.Abs(andgle - getAngleOfSeparation(body, joint1, joint2, joint3));
 
@@ -64,7 +64,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
         /// <summary>
-        /// Returns true is spine is strate within tolerance. 
+        /// Returns true is spine is strate within tolerance.
         /// </summary>
         public static Boolean isSpineStraight(Body body, double tolerance)
         {
@@ -75,7 +75,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is neck is strate within tolerance. 
+        /// Returns true is neck is strate within tolerance.
         /// </summary>
         public static Boolean isNeckStraight(Body body, double tolerance)
         {
@@ -90,9 +90,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     }static class Exersise {
         static Boolean hasStarted = false;
         /// <summary>
-        /// function returns 1 when task complete 
+        /// function returns 1 when task complete
         /// </summary>
-        /// 
+        ///
         public static int moveLeftArm(Body body, double tolerance)
         {
             JointType SpineShoulder = JointType.SpineShoulder;
@@ -100,7 +100,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             JointType ElbowLeft = JointType.ElbowLeft;
             JointType WristLeft = JointType.WristLeft;
             double startAngle = 120;
-            double endAngle = 170; //todo let angle be reflex 
+            double endAngle = 170; //todo let angle be reflex
 
 
             if (!CheckBodyForm.isSpineStraight(body, tolerance))
@@ -120,6 +120,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
                 {
                     Exersise.hasStarted = true;
+                    return -100;
                 }
             }
             else
@@ -129,10 +130,38 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 {
                     //todo congradulate
                     Exersise.hasStarted = false;
-                    return 1; 
+                    return 1;
                 }
             }
             return 0;
+        }
+        public static void printStartProjection(Body body){
+          double armLength = lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft)+
+                              lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);
+          double accuteAngle = startAngle - 90.0;
+          double projX = body.Joints[ShoulderLeft].Position.X - armLength * Math.Sin((Math.PI*accuteAngle)/180);
+          double projY = body.Joints[ShoulderLeft].Position.Y - armLength * Math.Cos((Math.PI*accuteAngle)/180);
+
+          Point end = new Point(point.projX, point.projY, body.Joints[WristLeft].Position.Z);
+          drawingContext.DrawLine(new Pen(Brushes.Gray, 1), body.Joints[ShoulderLeft].Position, end);
+        }
+
+        public static void printEndProjection(Body body){
+          double armLength = lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft)+
+                              lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);
+          if (endAngle <= 180){
+            double accuteAngle = endAngle - 90.0;
+            double projX = body.Joints[ShoulderLeft].Position.X - armLength * Math.Sin((Math.PI*accuteAngle)/180);
+            double projY = body.Joints[ShoulderLeft].Position.Y - armLength * Math.Cos((Math.PI*accuteAngle)/180);
+          }
+          else if(endAngle > 180){
+            double accuteAngle = endAngle - 180.0;
+            double projX = body.Joints[ShoulderLeft].Position.X - armLength * Math.Cos((Math.PI*accuteAngle)/180);
+            double projY = body.Joints[ShoulderLeft].Position.Y - armLength * Math.Sin((Math.PI*accuteAngle)/180);
+          }
+
+          Point end = new Point(point.projX, point.projY, body.Joints[WristLeft].Position.Z);
+          drawingContext.DrawLine(new Pen(Brushes.Gray, 1), body.Joints[ShoulderLeft].Position, end);
         }
 
     }

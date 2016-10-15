@@ -118,7 +118,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.bodyColors.Add(new Pen(Brushes.Blue, 6));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
-            
+
 
             //Sensor initialisation
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
@@ -134,10 +134,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// #########################     GENERAL DISPLAY STUFF     ######################################
-  
+
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         /// Gets the bitmap to display
         public ImageSource ImageSource
         {
@@ -146,7 +146,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 return this.colorBitmap;
             }
         }
-        
+
         /// Gets or sets the current status text to display
         public string StatusText
         {
@@ -191,7 +191,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-  
+
         /// <summary>
         /// Handles the user clicking on the screenshot button
         /// </summary>
@@ -268,7 +268,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
 
-    
+
         /// <summary>
         /// #####################       Handles the body frame data arriving from the sensor    #######################
         /// </summary>
@@ -278,7 +278,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             bool dataReceived = false;
 
-           
+
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
                 if (bodyFrame != null)
@@ -313,7 +313,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                         if (!exersiseFinished)
                         {
-                             
+
                         //end when function returns 1
                         int exersiseCode = Exersise.moveLeftArm(body,10);
                         switch (exersiseCode)
@@ -326,11 +326,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                 armMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo function straighten arm
                                 break;
+                            case -100:
+                                printStartProjection(body);
                             case 1:
                                 exersiseFinished = true;
                                 endMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo end the exersise, say well done and all that good stuff
                                 break;
+
                             default:
                                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
                                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
@@ -534,7 +537,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
 
-        // Add exersise generics 
+        // Add exersise generics
 
 
         //asume joint2 is the common joint, #todo add error checking
@@ -545,7 +548,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
-        /// in radians 
+        /// in radians
         /// </summary>
         public double getAngleOfSeparation(Body body, JointType joint1, JointType joint2, JointType joint3)
         {
@@ -558,7 +561,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Calculates length between two joints. 
+        /// Calculates length between two joints.
         /// </summary>
         public double lengthBetweenJoints(Body body, JointType joint1, JointType joint2)
         {
@@ -572,11 +575,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is spine is strate within tolerance. 
+        /// Returns true is spine is strate within tolerance.
         /// </summary>
         public Boolean isSpineStraight(Body body, double tolerance)
         {
-            //fix this 
+            //fix this
             // neck,spineshoulder,spineMid,spineBase
             return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid) )||
                    tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid, JointType.SpineBase));
@@ -585,7 +588,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is neck is strate within tolerance. 
+        /// Returns true is neck is strate within tolerance.
         /// </summary>
         public Boolean isNeckStraight(Body body, double tolerance)
         {
