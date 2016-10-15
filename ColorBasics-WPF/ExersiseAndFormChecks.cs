@@ -126,7 +126,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 if (body.Joints[part].TrackingState != TrackingState.Tracked)
                 {
-                    return 0;
+                    return -72;
                 }
             }
                 
@@ -161,9 +161,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     return 1;
                 }
             }
-            return 0;
+            return -100;
         }
-        public static void printStartProjection(Body body , DrawingContext drawingContext)
+        public static Tuple<Point,Point> printStartProjection(Body body , DrawingContext drawingContext)
         {
           double startAngle = 120;
           double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft)+
@@ -172,11 +172,22 @@ namespace Microsoft.Samples.Kinect.ColorBasics
           double projX = body.Joints[JointType.ShoulderLeft].Position.X - armLength * Math.Sin((Math.PI*accuteAngle)/180);
           double projY = body.Joints[JointType.ShoulderLeft].Position.Y - armLength * Math.Cos((Math.PI*accuteAngle)/180);
 
-            Point end = new Point(projX, projY);//, body.Joints[JointType.WristLeft].Position.Z);
-            Point start = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
 
+
+            //todo make this work
+            //http://stackoverflow.com/questions/26456448/cannot-convert-microsoft-kinect-skeletonpoint-to-system-windows-point
+            DepthImagePoint depthPoint = Kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(skeletonPoint.Position
+                 , Kinect.DepthStream.Format);
+
+            Point end = new Point(projX* (-1000), projY*(-1000));//, body.Joints[JointType.WristLeft].Position.Z);
+            Point start = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
+            Console.Write(start);
+            Console.Write(end);
             Console.WriteLine("foo");
-            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), start, end);
+            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), body.Joints[JointType.ShoulderLeft].Position
+, end);
+            return Tuple.Create(start, end);
+
         }
         /*
         public static void printEndProjection(Body body){
