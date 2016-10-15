@@ -334,7 +334,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                         spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                                         armMsg.Visibility = System.Windows.Visibility.Collapsed;
                                         Tuple<Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
-                                        dc.DrawLine(new Pen(Brushes.Gray, 3000), drawPoints.Item1, drawPoints.Item2);
+                                        dc.DrawLine(new Pen(Brushes.Gray, 13), drawPoints.Item1, drawPoints.Item2);
                                         //while (true) { Console.WriteLine("i hate git"); }
                                         break;
                                     case 1:
