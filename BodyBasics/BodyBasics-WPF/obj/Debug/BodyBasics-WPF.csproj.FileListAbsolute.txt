@@ -13,3 +13,6 @@ C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\Microsoft.S
 C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.csproj.GenerateResource.Cache
 C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
 C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb
+C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
+C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
+C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb
