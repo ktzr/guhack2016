@@ -16,6 +16,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
     using Microsoft.Kinect.Wpf.Controls;
+    using SqlServer.Server;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -24,6 +25,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         //#############################      Color Basics Objects        #################################
         private KinectSensor kinectSensor = null;
+        private MultiSourceFrameReader _reader;
         //private ColorFrameReader colorFrameReader = null;
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
@@ -53,6 +55,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //##########################    Colour Basics Stuff     ####################################
             this.kinectSensor = KinectSensor.GetDefault();
+            _reader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
+            _reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+
             /*this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
             FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
@@ -124,7 +129,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             //Sensor initialisation
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
-            this.kinectSensor.Open();
+            if(kinectSensor != null)
+            {
+                kinectSensor.Open();
+            }
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
 
@@ -136,19 +144,92 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// #########################     GENERAL DISPLAY STUFF     ######################################
-  
+        
+        void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
+        {
+            var reference = e.FrameReference.AcquireFrame();
+            using (var frame = reference.ColorFrameReference.AcquireFrame())
+            {
+                if (frame != null)
+                {
+                    //Do something with this frame
+                }
+            }
+            using (var frame = reference.DepthFrameReference.AcquireFrame())
+            {
+                if (frame != null)
+                {
+                    //Do something with you frame
+                }
+            }
+        }
+
+        // ####################  Color image source stream   ############################
+        private ImageSource ToBitmap(ColorFrame frame)
+        {
+            int width = frame.FrameDescription.Width;
+            int height = frame.FrameDescription.Height;
+
+            byte[] pixels = new byte[width * height * ((PixelFormats.Bgr32.BitsPerPixel + 7) / 8)];
+
+            if (frame.RawColorImageFormat == ColorImageFormat.Bgra)
+            {
+                frame.CopyRawFrameDataToArray(pixels);
+            }
+            else
+            {
+                frame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
+            }
+
+            int stride = width * PixelFormats.Bgr32.BitsPerPixel / 8;
+
+            return BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgr32, null, pixels, stride);
+        }
+
+        // ################    Depth image source stream ########################
+        private ImageSource ToBitmap(DepthFrame frame)
+        {
+            int width = frame.FrameDescription.Width;
+            int height = frame.FrameDescription.Height;
+
+            ushort minDepth = frame.DepthMinReliableDistance;
+            ushort maxDepth = frame.DepthMaxReliableDistance;
+
+            ushort[] depthData = new ushort[width * height];
+            byte[] pixelData = new byte[width * height * (PixelFormats.Bgr32.BitsPerPixel + 7) / 8];
+
+            frame.CopyFrameDataToArray(depthData);
+
+            int colorIndex = 0;
+            for (int depthIndex = 0; depthIndex < depthData.Length; ++depthIndex)
+            {
+                ushort depth = depthData[depthIndex];
+                byte intensity = (byte)(depth >= minDepth && depth <= maxDepth ? depth : 0);
+
+                pixelData[colorIndex++] = intensity; // Blue
+                pixelData[colorIndex++] = intensity; // Green
+                pixelData[colorIndex++] = intensity; // Red
+
+                ++colorIndex;
+            }
+
+            int stride = width * PixelFormats.Bgr32.BitsPerPixel / 8;
+
+            return BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
+        }
+
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         public event PropertyChangedEventHandler PropertyChanged;
         
         /// Gets the bitmap to display
-        public ImageSource ImageSource
+        /*public ImageSource ImageSource
         {
             get
             {
                 return this.imageSource;
                 //return this.colorBitmap;
             }
-        }
+        }*/
         
         /// Gets or sets the current status text to display
         public string StatusText
