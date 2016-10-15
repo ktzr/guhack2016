@@ -28,3 +28,5 @@ C:\Users\the_k\Desktop\guhack2016\ColorBasics-WPF\obj\Debug\Microsoft.Samples.Ki
 C:\Users\the_k\Desktop\guhack2016\ColorBasics-WPF\obj\Debug\ColorBasics-WPF.csproj.GenerateResource.Cache
 C:\Users\the_k\Desktop\guhack2016\ColorBasics-WPF\obj\Debug\ColorBasics-WPF.exe
 C:\Users\the_k\Desktop\guhack2016\ColorBasics-WPF\obj\Debug\ColorBasics-WPF.pdb
+C:\Users\Philippe\Desktop\Hackathon\guhack2016\ColorBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.Wpf.Controls.dll
+C:\Users\Philippe\Desktop\Hackathon\guhack2016\ColorBasics-WPF\bin\AnyCPU\Debug\Microsoft.Kinect.Wpf.Controls.xml

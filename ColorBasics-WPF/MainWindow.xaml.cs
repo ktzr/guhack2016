@@ -24,7 +24,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         //#############################      Color Basics Objects        #################################
         private KinectSensor kinectSensor = null;
-        private ColorFrameReader colorFrameReader = null;
+        //private ColorFrameReader colorFrameReader = null;
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
 
@@ -53,11 +53,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //##########################    Colour Basics Stuff     ####################################
             this.kinectSensor = KinectSensor.GetDefault();
-            this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
+            /*this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
             FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
             this.colorBitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgr32, null);
-
+            */
             //#########################        Body Parts stuff       ###################################
 
             // get the coordinate mapper
@@ -72,7 +72,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
-            this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+
+            // this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             // a bone defined as a line between two joints
             this.bones = new List<Tuple<JointType, JointType>>();
 
@@ -144,7 +145,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             get
             {
-                return this.colorBitmap;
+                return this.imageSource;
+                //return this.colorBitmap;
             }
         }
         
@@ -176,7 +178,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
-        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        /*private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             if (this.colorFrameReader != null)
             {
@@ -190,9 +192,39 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
+        }*/
+
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
+        {
+            if (this.bodyFrameReader != null)
+            {
+                // BodyFrameReader is IDisposable
+                this.bodyFrameReader.Dispose();
+                this.bodyFrameReader = null;
+            }
+
+            if (this.kinectSensor != null)
+            {
+                this.kinectSensor.Close();
+                this.kinectSensor = null;
+            }
         }
 
-  
+        /// <summary>
+        /// Execute start up tasks
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.bodyFrameReader != null)
+            {
+                this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+            }
+        }
+
+
         /// <summary>
         /// Handles the user clicking on the screenshot button
         /// </summary>
