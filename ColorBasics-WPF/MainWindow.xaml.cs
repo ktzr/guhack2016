@@ -71,7 +71,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
-
+            this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             // a bone defined as a line between two joints
             this.bones = new List<Tuple<JointType, JointType>>();
 
@@ -278,6 +278,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             bool dataReceived = false;
 
+           
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
                 if (bodyFrame != null)
@@ -305,6 +306,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
                     {
+
+                        //end when function returns 1
+                        exersise.moveLeftArm(body,5.1);
+
+                     
                         Pen drawPen = this.bodyColors[penIndex++];
 
                         if (body.IsTracked)
