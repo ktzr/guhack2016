@@ -315,7 +315,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                         {
 
                         //end when function returns 1
-                        int exersiseCode = Exersise.moveLeftArm(body,10);
+                        int exersiseCode = Exersise.moveLeftArm(body,3);
                         switch (exersiseCode)
                         {
                             case -1:
@@ -327,10 +327,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                 //todo function straighten arm
                                 break;
                             case -100:
-                                printStartProjection(body);
+                                    Exersise.printStartProjection(body, dc );
+                                break;
                             case 1:
                                 exersiseFinished = true;
-                                endMsg.Visibility = System.Windows.Visibility.Visible;
+                                //endMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo end the exersise, say well done and all that good stuff
                                 break;
 
