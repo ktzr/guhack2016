@@ -53,7 +53,13 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// </summary>
         public static Boolean isSraight(Body body, double tolerance, JointType joint1, JointType joint2, JointType joint3)
         {
-            Console.WriteLine(getAngleOfSeparation(body, joint1, joint2, joint3));
+            Console.Write(tolerance);
+            Console.Write(">");
+            Console.Write(Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
+            Console.Write("\n");
+
+
+            Console.WriteLine(tolerance> Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
             return tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3));
 
 
@@ -113,8 +119,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             JointType WristLeft = JointType.WristLeft;
 
             JointType[] bodyParts = new JointType[] { SpineShoulder, ShoulderLeft, ElbowLeft, WristLeft };
-            double startAngle = 120;
-            double endAngle = 170; //todo let angle be reflex
+            double startAngle = 100;
+            double endAngle = 150; //todo let angle be reflex
 
             foreach (JointType part in bodyParts)
             {
@@ -124,12 +130,12 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
                 
-            if (!CheckBodyForm.isSpineStraight(body, tolerance))
+            if (!CheckBodyForm.isSpineStraight(body, tolerance)&& !Exersise.hasStarted)
             {
                 return -1;
                 //todo  msg strighten spine
             }
-            if (!CheckBodyForm.isSraight(body, tolerance+10, ShoulderLeft, ElbowLeft, WristLeft))
+            if (!CheckBodyForm.isSraight(body, tolerance+10, ShoulderLeft, ElbowLeft, WristLeft)&&!Exersise.hasStarted)
             {
                 return -2;
                 //todo  msg strighten arm
@@ -138,16 +144,17 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 //todo prompt go to start angle (draw box/line showing where arm should be)
 
-                if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
+                if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) && body.Joints[WristLeft].Position.Y < body.Joints[ShoulderLeft].Position.Y)
                 {
                     Exersise.hasStarted = true;
-                    return -100;
                 }
+                return -100;
+                
             }
             else
             {
                 //todo promp to go to end angle  (draw box/line showing where arm should be)
-                if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
+                if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft)&& body.Joints[WristLeft].Position.Y> body.Joints[ShoulderLeft].Position.Y)
                 {
                     //todo congradulate
                     Exersise.hasStarted = false;
@@ -167,7 +174,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             Point end = new Point(projX, projY);//, body.Joints[JointType.WristLeft].Position.Z);
             Point start = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
-          drawingContext.DrawLine(new Pen(Brushes.Gray, 1), start, end);
+
+            Console.WriteLine("foo");
+            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), start, end);
         }
         /*
         public static void printEndProjection(Body body){

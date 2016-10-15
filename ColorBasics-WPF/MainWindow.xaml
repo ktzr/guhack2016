@@ -53,7 +53,7 @@
         </Viewbox>
 
         <TextBlock Name="spineMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your spine</TextBlock>
-        <TextBlock Name="armMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your arm</TextBlock>
+        <TextBlock Name="armMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your left arm</TextBlock>
         <TextBlock Name="endMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="40" Visibility="Hidden">Well done</TextBlock>
 
 

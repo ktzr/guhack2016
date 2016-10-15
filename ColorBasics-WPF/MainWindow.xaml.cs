@@ -302,7 +302,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 {
                     // Draw a transparent background to set the render size
                     dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
-
+                    
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
                     {
@@ -316,6 +316,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                         //end when function returns 1
                         int exersiseCode = Exersise.moveLeftArm(body,3);
+                        Console.WriteLine(exersiseCode);
                         switch (exersiseCode)
                         {
                             case -1:
@@ -327,6 +328,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                 //todo function straighten arm
                                 break;
                             case -100:
+                                    spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                    armMsg.Visibility = System.Windows.Visibility.Collapsed;
                                     Exersise.printStartProjection(body, dc );
                                 break;
                             case 1:
@@ -335,9 +338,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                                 //todo end the exersise, say well done and all that good stuff
                                 break;
 
-                            default:
-                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            case 0:
+                                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                armMsg.Visibility = System.Windows.Visibility.Collapsed;
                                 break;
 
                         }
