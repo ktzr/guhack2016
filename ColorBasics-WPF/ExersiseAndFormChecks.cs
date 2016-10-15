@@ -99,7 +99,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             JointType ShoulderLeft = JointType.ShoulderLeft;
             JointType ElbowLeft = JointType.ElbowLeft;
             JointType WristLeft = JointType.WristLeft;
-            //todo check start angle 
             double startAngle = 120;
             double endAngle = 170; //todo let angle be reflex 
 

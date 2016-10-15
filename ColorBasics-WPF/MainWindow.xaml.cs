@@ -307,19 +307,36 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     foreach (Body body in this.bodies)
                     {
 
+
+                        //for testing remove at some point
+                        Boolean exersiseFinished = false;
+
+                        if (!exersiseFinished)
+                        {
+                             
                         //end when function returns 1
-                        int exersiseCode = Exersise.moveLeftArm(body,5.1);
+                        int exersiseCode = Exersise.moveLeftArm(body,10);
                         switch (exersiseCode)
                         {
                             case -1:
                                 //todo function fix spine
+                                spineMsg.Visibility = System.Windows.Visibility.Visible;
                                 break;
                             case -2:
+                                armMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo function straighten arm
                                 break;
                             case 1:
+                                exersiseFinished = true;
+                                endMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo end the exersise, say well done and all that good stuff
                                 break;
+                            default:
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                break;
+
+                        }
                         }
 
 
