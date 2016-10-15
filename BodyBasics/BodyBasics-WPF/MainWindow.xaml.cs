@@ -340,6 +340,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                             // convert the joint points to depth (display) space
                             Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
 
+                            
                             foreach (JointType jointType in joints.Keys)
                             {
                                 // sometimes the depth(Z) of an inferred joint may show as negative
@@ -509,15 +510,19 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         //asume joint2 is the common joint, #todo add error checking
         //use cosine rule to find angle at joint 2
 
+
+
+
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
         /// in radians 
         /// </summary>
-        public double getAngleOfSeperation(CameraSpacePoint joint1, CameraSpacePoint joint2, CameraSpacePoint joint3)
+        public double getAngleOfSeparation(Body body, JointType joint1, JointType joint2, JointType joint3)
         {
-            double a = lengthBetweenJoints(joint2, joint3);
-            double b = lengthBetweenJoints(joint1, joint2);
-            double c = lengthBetweenJoints(joint1, joint3);
+
+            double a = lengthBetweenJoints(body, joint2, joint3);
+            double b = lengthBetweenJoints(body, joint1, joint2);
+            double c = lengthBetweenJoints(body, joint1, joint3);
 
             return Math.Acos((a * a + b * b - c * c) / (2 * a * b));
         }
@@ -525,31 +530,26 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Calculates length between two joints. 
         /// </summary>
-        public double lengthBetweenJoints(CameraSpacePoint joint1, CameraSpacePoint joint2)
+        public double lengthBetweenJoints(Body body, JointType joint1, JointType joint2)
         {
-            double xDistance = joint1.X - joint2.X;
-            double YDistance = joint1.Y - joint2.Y;
+            double XDistance = body.Joints[joint1].Position.X - body.Joints[joint2].Position.X;
+            double YDistance = body.Joints[joint1].Position.Y - body.Joints[joint2].Position.Y;
 
 
-            return Math.Sqrt(YDistance * YDistance + xDistance * xDistance);
+
+            return Math.Sqrt(YDistance * YDistance + XDistance * XDistance);
 
         }
 
         /// <summary>
         /// Returns true is spine is strate within tolerance. 
         /// </summary>
-        public Boolean isSpineStraight(double tolerance,
-                                        //todo pass a list or body instead?
-                                        CameraSpacePoint neck,
-                                        CameraSpacePoint spineShoulder,
-                                        CameraSpacePoint spineMid,
-                                        CameraSpacePoint spineBase
-                                        )
+        public Boolean isSpineStraight(Body body, double tolerance)
         {
             //fix this 
             // neck,spineshoulder,spineMid,spineBase
-            return tolerance < getAngleOfSeperation(neck, spineShoulder, spineMid) ||
-                   tolerance < getAngleOfSeperation(spineShoulder, spineMid, spineBase);
+            return tolerance < getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid) ||
+                   tolerance < getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid,JointType.SpineBase);
 
 
         }
@@ -557,15 +557,11 @@ namespace Microsoft.Samples.Kinect.BodyBasics
         /// <summary>
         /// Returns true is neck is strate within tolerance. 
         /// </summary>
-        public Boolean isNeckStraight(double tolerance,
-                                        //todo pass a list or body instead?
-                                        CameraSpacePoint head,
-                                        CameraSpacePoint neck,
-                                        CameraSpacePoint spineShoulder
-                                        )
+        public Boolean isNeckStraight(Body body, double tolerance)
         {
             // head,neck,spineShoulder
-            return tolerance < getAngleOfSeperation(head, neck, spineShoulder);
+            return tolerance < getAngleOfSeparation(body, JointType.Head, JointType.Neck, JointType.SpineShoulder);
+
 
         }
 
