@@ -183,12 +183,12 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double projX = pointInColorSpace.X + linelenght * sin;
             double projY = pointInColorSpace.Y + linelenght * cos;
 
-            Point start = new Point(pointInColorSpace.X, pointInColorSpace.Y);
-            Point end = new Point(projX, projY);
+            Point end = new Point(pointInColorSpace.X, pointInColorSpace.Y);
+            Point start = new Point(projX, projY);
             Console.WriteLine(start);
             Console.WriteLine(end);
             Console.WriteLine("foo");
-            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), start, end);
+            drawingContext.DrawLine(new Pen(Brushes.Gray, 50), start, end);
             return Tuple.Create(start, end);
 
         }
