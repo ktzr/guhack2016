@@ -502,6 +502,86 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             }
         }
 
+
+        // Add exersise generics 
+
+
+        //asume joint2 is the common joint, #todo add error checking
+        //use cosine rule to find angle at joint 2
+
+        /// <summary>
+        /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
+        /// in radians 
+        /// </summary>
+        public double getAngleOfSeperation(CameraSpacePoint joint1, CameraSpacePoint joint2, CameraSpacePoint joint3)
+        {
+            double a = lengthBetweenJoints(joint2, joint3);
+            double b = lengthBetweenJoints(joint1, joint2);
+            double c = lengthBetweenJoints(joint1, joint3);
+
+            return Math.Acos((a * a + b * b - c * c) / (2 * a * b));
+        }
+
+        /// <summary>
+        /// Calculates length between two joints. 
+        /// </summary>
+        public double lengthBetweenJoints(CameraSpacePoint joint1, CameraSpacePoint joint2)
+        {
+            double xDistance = joint1.X - joint2.X;
+            double YDistance = joint1.Y - joint2.Y;
+
+
+            return Math.Sqrt(YDistance * YDistance + xDistance * xDistance);
+
+        }
+
+        /// <summary>
+        /// Returns true is spine is strate within tolerance. 
+        /// </summary>
+        public Boolean isSpineStraight(double tolerance,
+                                        //todo pass a list or body instead?
+                                        CameraSpacePoint neck,
+                                        CameraSpacePoint spineShoulder,
+                                        CameraSpacePoint spineMid,
+                                        CameraSpacePoint spineBase
+                                        )
+        {
+            //fix this 
+            // neck,spineshoulder,spineMid,spineBase
+            return tolerance < getAngleOfSeperation(neck, spineShoulder, spineMid) ||
+                   tolerance < getAngleOfSeperation(spineShoulder, spineMid, spineBase)
+
+
+        }
+
+        /// <summary>
+        /// Returns true is neck is strate within tolerance. 
+        /// </summary>
+        public Boolean isNeckStraight(double tolerance,
+                                        //todo pass a list or body instead?
+                                        CameraSpacePoint head,
+                                        CameraSpacePoint neck,
+                                        CameraSpacePoint spineShoulder
+                                        )
+        {
+            // head,neck,spineShoulder
+            return tolerance < getAngleOfSeperation(head, neck, spineShoulder)
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         /// <summary>
         /// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
         /// </summary>
