@@ -15,8 +15,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
-    using Microsoft.Kinect.Wpf.Controls;
-    using SqlServer.Server;
 
     /// <summary>
     /// Interaction logic for MainWindow
@@ -25,10 +23,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         //#############################      Color Basics Objects        #################################
         private KinectSensor kinectSensor = null;
-        private ColorFrameReader colorFrameReader = null;  //COLOR STUFF
+        private ColorFrameReader colorFrameReader = null;
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
-        
+
         //#############################        Body parts objects         #################################
         private const double HandSize = 30;
         private const double JointThickness = 3;
@@ -54,9 +52,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //##########################    Colour Basics Stuff     ####################################
             this.kinectSensor = KinectSensor.GetDefault();
-
-
-            //COLOR STUFF
             this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
             FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
@@ -76,8 +71,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
-
-            // this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+            this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             // a bone defined as a line between two joints
             this.bones = new List<Tuple<JointType, JointType>>();
 
@@ -124,11 +118,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.bodyColors.Add(new Pen(Brushes.Blue, 6));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
-            
+
 
             //Sensor initialisation
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
-            kinectSensor.Open();
+            this.kinectSensor.Open();
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
 
@@ -140,20 +134,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// #########################     GENERAL DISPLAY STUFF     ######################################
-        
+
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         public event PropertyChangedEventHandler PropertyChanged;
-        
+
         /// Gets the bitmap to display
         public ImageSource ImageSource
         {
             get
             {
-                //return this.imageSource;
                 return this.colorBitmap;
             }
         }
-        
+
         /// Gets or sets the current status text to display
         public string StatusText
         {
@@ -177,8 +170,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-
-
+        /// <summary>
+        /// Execute shutdown tasks
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             if (this.colorFrameReader != null)
@@ -188,26 +184,50 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 this.colorFrameReader = null;
             }
 
-            if (this.bodyFrameReader != null)
-            {
-                // BodyFrameReader is IDisposable
-                this.bodyFrameReader.Dispose();
-                this.bodyFrameReader = null;
-            }
-
             if (this.kinectSensor != null)
             {
                 this.kinectSensor.Close();
                 this.kinectSensor = null;
             }
         }
-        
-        // DEPTH STUFF
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+
+
+        /// <summary>
+        /// Handles the user clicking on the screenshot button
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void ScreenshotButton_Click(object sender, RoutedEventArgs e)
         {
-            if (this.bodyFrameReader != null)
+            if (this.colorBitmap != null)
             {
-                this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+                // create a png bitmap encoder which knows how to save a .png file
+                BitmapEncoder encoder = new PngBitmapEncoder();
+
+                // create frame from the writable bitmap and add to encoder
+                encoder.Frames.Add(BitmapFrame.Create(this.colorBitmap));
+
+                string time = System.DateTime.Now.ToString("hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
+
+                string myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+
+                string path = Path.Combine(myPhotos, "KinectScreenshot-Color-" + time + ".png");
+
+                // write the new file to disk
+                try
+                {
+                    // FileStream is IDisposable
+                    using (FileStream fs = new FileStream(path, FileMode.Create))
+                    {
+                        encoder.Save(fs);
+                    }
+
+                    this.StatusText = string.Format(Properties.Resources.SavedScreenshotStatusTextFormat, path);
+                }
+                catch (IOException)
+                {
+                    this.StatusText = string.Format(Properties.Resources.FailedScreenshotStatusTextFormat, path);
+                }
             }
         }
 
@@ -248,7 +268,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
 
-    
+
         /// <summary>
         /// #####################       Handles the body frame data arriving from the sensor    #######################
         /// </summary>
@@ -258,7 +278,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             bool dataReceived = false;
 
-           
+
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
                 if (bodyFrame != null)
@@ -281,25 +301,46 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
                     // Draw a transparent background to set the render size
-                    dc.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, 100, 100)); //@TODO CHANGE HARD CODED
+                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
                     {
 
+
+                        //for testing remove at some point
+                        Boolean exersiseFinished = false;
+
+                        if (!exersiseFinished)
+                        {
+
                         //end when function returns 1
-                        int exersiseCode = Exersise.moveLeftArm(body,5.1);
+                        int exersiseCode = Exersise.moveLeftArm(body,3);
                         switch (exersiseCode)
                         {
                             case -1:
                                 //todo function fix spine
+                                spineMsg.Visibility = System.Windows.Visibility.Visible;
                                 break;
                             case -2:
+                                armMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo function straighten arm
                                 break;
+                            case -100:
+                                    Exersise.printStartProjection(body, dc );
+                                break;
                             case 1:
+                                exersiseFinished = true;
+                                //endMsg.Visibility = System.Windows.Visibility.Visible;
                                 //todo end the exersise, say well done and all that good stuff
                                 break;
+
+                            default:
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                break;
+
+                        }
                         }
 
 
@@ -497,7 +538,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
 
-        // Add exersise generics 
+        // Add exersise generics
 
 
         //asume joint2 is the common joint, #todo add error checking
@@ -508,7 +549,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
-        /// in radians 
+        /// in radians
         /// </summary>
         public double getAngleOfSeparation(Body body, JointType joint1, JointType joint2, JointType joint3)
         {
@@ -521,7 +562,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Calculates length between two joints. 
+        /// Calculates length between two joints.
         /// </summary>
         public double lengthBetweenJoints(Body body, JointType joint1, JointType joint2)
         {
@@ -535,11 +576,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is spine is strate within tolerance. 
+        /// Returns true is spine is strate within tolerance.
         /// </summary>
         public Boolean isSpineStraight(Body body, double tolerance)
         {
-            //fix this 
+            //fix this
             // neck,spineshoulder,spineMid,spineBase
             return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid) )||
                    tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid, JointType.SpineBase));
@@ -548,7 +589,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is neck is strate within tolerance. 
+        /// Returns true is neck is strate within tolerance.
         /// </summary>
         public Boolean isNeckStraight(Body body, double tolerance)
         {
