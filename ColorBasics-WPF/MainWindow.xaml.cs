@@ -25,7 +25,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         //#############################      Color Basics Objects        #################################
         private KinectSensor kinectSensor = null;
-        //private MultiSourceFrameReader _reader;
         private ColorFrameReader colorFrameReader = null;  //COLOR STUFF
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
@@ -55,9 +54,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //##########################    Colour Basics Stuff     ####################################
             this.kinectSensor = KinectSensor.GetDefault();
-            /*_reader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
-            _reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
-            */
 
 
             //COLOR STUFF
@@ -145,80 +141,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         /// #########################     GENERAL DISPLAY STUFF     ######################################
         
-        /*void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
-        {
-            var reference = e.FrameReference.AcquireFrame();
-            using (var frame = reference.ColorFrameReference.AcquireFrame())
-            {
-                if (frame != null)
-                {
-                    //Do something with this frame
-                }
-            }
-            using (var frame = reference.DepthFrameReference.AcquireFrame())
-            {
-                if (frame != null)
-                {
-                    //Do something with you frame
-                }
-            }
-        }
-
-        // ####################  Color image source stream   ############################
-        private ImageSource ToBitmap(ColorFrame frame)
-        {
-            int width = frame.FrameDescription.Width;
-            int height = frame.FrameDescription.Height;
-
-            byte[] pixels = new byte[width * height * ((PixelFormats.Bgr32.BitsPerPixel + 7) / 8)];
-
-            if (frame.RawColorImageFormat == ColorImageFormat.Bgra)
-            {
-                frame.CopyRawFrameDataToArray(pixels);
-            }
-            else
-            {
-                frame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
-            }
-
-            int stride = width * PixelFormats.Bgr32.BitsPerPixel / 8;
-
-            return BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgr32, null, pixels, stride);
-        }
-
-        // ################    Depth image source stream ########################
-        private ImageSource ToBitmap(DepthFrame frame)
-        {
-            int width = frame.FrameDescription.Width;
-            int height = frame.FrameDescription.Height;
-
-            ushort minDepth = frame.DepthMinReliableDistance;
-            ushort maxDepth = frame.DepthMaxReliableDistance;
-
-            ushort[] depthData = new ushort[width * height];
-            byte[] pixelData = new byte[width * height * (PixelFormats.Bgr32.BitsPerPixel + 7) / 8];
-
-            frame.CopyFrameDataToArray(depthData);
-
-            int colorIndex = 0;
-            for (int depthIndex = 0; depthIndex < depthData.Length; ++depthIndex)
-            {
-                ushort depth = depthData[depthIndex];
-                byte intensity = (byte)(depth >= minDepth && depth <= maxDepth ? depth : 0);
-
-                pixelData[colorIndex++] = intensity; // Blue
-                pixelData[colorIndex++] = intensity; // Green
-                pixelData[colorIndex++] = intensity; // Red
-
-                ++colorIndex;
-            }
-
-            int stride = width * PixelFormats.Bgr32.BitsPerPixel / 8;
-
-            return BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
-        }
-        */
-
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         public event PropertyChangedEventHandler PropertyChanged;
         
@@ -255,12 +177,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-        /// <summary>
-        /// Execute shutdown tasks
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        /*private void MainWindow_Closing(object sender, CancelEventArgs e)
+
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
             if (this.colorFrameReader != null)
             {
@@ -269,16 +188,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 this.colorFrameReader = null;
             }
 
-            if (this.kinectSensor != null)
-            {
-                this.kinectSensor.Close();
-                this.kinectSensor = null;
-            }
-        }*/
-
-
-        private void MainWindow_Closing(object sender, CancelEventArgs e)
-        {
             if (this.bodyFrameReader != null)
             {
                 // BodyFrameReader is IDisposable
@@ -294,51 +203,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
         
         // DEPTH STUFF
-        /*private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.bodyFrameReader != null)
             {
                 this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
-            }
-        }*/
-
-
-        /// <summary>
-        /// Handles the user clicking on the screenshot button
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void ScreenshotButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.colorBitmap != null)
-            {
-                // create a png bitmap encoder which knows how to save a .png file
-                BitmapEncoder encoder = new PngBitmapEncoder();
-
-                // create frame from the writable bitmap and add to encoder
-                encoder.Frames.Add(BitmapFrame.Create(this.colorBitmap));
-
-                string time = System.DateTime.Now.ToString("hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
-
-                string myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-
-                string path = Path.Combine(myPhotos, "KinectScreenshot-Color-" + time + ".png");
-
-                // write the new file to disk
-                try
-                {
-                    // FileStream is IDisposable
-                    using (FileStream fs = new FileStream(path, FileMode.Create))
-                    {
-                        encoder.Save(fs);
-                    }
-
-                    this.StatusText = string.Format(Properties.Resources.SavedScreenshotStatusTextFormat, path);
-                }
-                catch (IOException)
-                {
-                    this.StatusText = string.Format(Properties.Resources.FailedScreenshotStatusTextFormat, path);
-                }
             }
         }
 
@@ -412,7 +281,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
                     // Draw a transparent background to set the render size
-                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+                    dc.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, 100, 100)); //@TODO CHANGE HARD CODED
 
                     int penIndex = 0;
                     foreach (Body body in this.bodies)
