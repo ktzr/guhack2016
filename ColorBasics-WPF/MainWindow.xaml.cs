@@ -25,11 +25,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     {
         //#############################      Color Basics Objects        #################################
         private KinectSensor kinectSensor = null;
-        private MultiSourceFrameReader _reader;
-        //private ColorFrameReader colorFrameReader = null;
+        //private MultiSourceFrameReader _reader;
+        private ColorFrameReader colorFrameReader = null;  //COLOR STUFF
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
-
+        
         //#############################        Body parts objects         #################################
         private const double HandSize = 30;
         private const double JointThickness = 3;
@@ -55,14 +55,17 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //##########################    Colour Basics Stuff     ####################################
             this.kinectSensor = KinectSensor.GetDefault();
-            _reader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
+            /*_reader = kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
             _reader.MultiSourceFrameArrived += Reader_MultiSourceFrameArrived;
+            */
 
-            /*this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
+
+            //COLOR STUFF
+            this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
             FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
             this.colorBitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgr32, null);
-            */
+
             //#########################        Body Parts stuff       ###################################
 
             // get the coordinate mapper
@@ -129,10 +132,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             //Sensor initialisation
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
-            if(kinectSensor != null)
-            {
-                kinectSensor.Open();
-            }
+            kinectSensor.Open();
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
 
@@ -145,7 +145,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         /// #########################     GENERAL DISPLAY STUFF     ######################################
         
-        void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
+        /*void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             var reference = e.FrameReference.AcquireFrame();
             using (var frame = reference.ColorFrameReference.AcquireFrame())
@@ -217,19 +217,20 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             return BitmapSource.Create(width, height, 96, 96, PixelFormats.Bgr32, null, pixelData, stride);
         }
+        */
 
         /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
         public event PropertyChangedEventHandler PropertyChanged;
         
         /// Gets the bitmap to display
-        /*public ImageSource ImageSource
+        public ImageSource ImageSource
         {
             get
             {
-                return this.imageSource;
-                //return this.colorBitmap;
+                //return this.imageSource;
+                return this.colorBitmap;
             }
-        }*/
+        }
         
         /// Gets or sets the current status text to display
         public string StatusText
@@ -291,19 +292,15 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 this.kinectSensor = null;
             }
         }
-
-        /// <summary>
-        /// Execute start up tasks
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        
+        // DEPTH STUFF
+        /*private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (this.bodyFrameReader != null)
             {
                 this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
             }
-        }
+        }*/
 
 
         /// <summary>
