@@ -16,3 +16,6 @@ C:\Users\the_k\Desktop\Hackathon\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-
 C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
 C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
 C:\Users\Philippe\Desktop\Hackathon\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb
+C:\Users\the_k\Desktop\guhack2016\BodyBasics\BodyBasics-WPF\bin\AnyCPU\Debug\BodyBasics-WPF.exe.config
+C:\Users\the_k\Desktop\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.exe
+C:\Users\the_k\Desktop\guhack2016\BodyBasics\BodyBasics-WPF\obj\Debug\BodyBasics-WPF.pdb
