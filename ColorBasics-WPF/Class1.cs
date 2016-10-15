@@ -8,19 +8,8 @@ using Microsoft.Kinect;
 
 namespace Microsoft.Samples.Kinect.ColorBasics
 {
-    static class exersise
+    static class CheckBodyForm
     {
-        //private Body statusText = null;
-
-        // Add exersise generics 
-
-
-        //asume joint2 is the common joint, #todo add error checking
-        //use cosine rule to find angle at joint 2
-
-
-
-
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
         /// in radians 
@@ -97,14 +86,13 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
 
-        //////////////////// todo implemtation
 
+    }static class Exersise {
+        static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete 
         /// </summary>
         /// 
-        static Boolean hasStarted = false;
-
         public static int moveLeftArm(Body body, double tolerance)
         {
             Boolean hasStarted;
@@ -117,27 +105,27 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double endAngle = 170; //todo let angle be reflex 
 
 
-            if (!isSpineStraight(body, tolerance))
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))
             {
                 //todo  msg strighten spine
             }
-            if (!isSraight(body, tolerance, ShoulderLeft, ElbowLeft, WristLeft))
+            if (!CheckBodyForm.isSraight(body, tolerance, ShoulderLeft, ElbowLeft, WristLeft))
             {
                 //todo  msg strighten arm
             }
-            if (!exersise.hasStarted)
+            if (!Exersise.hasStarted)
             {
                 // todo prompt go to start angle (draw box/line showing where arm should be)
 
-                if (isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
+                if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
                 {
-                    exersise.hasStarted = true;
+                    Exersise.hasStarted = true;
                 }
             }
             else
             {
                 //todo promp to go to end angle  (draw box/line showing where arm should be)
-                if (isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
+                if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
                 {
                     //todo congradulate
                     return 1; 
