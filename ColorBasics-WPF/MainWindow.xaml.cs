@@ -21,13 +21,15 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-        //#############################      Color Basics Objects        #################################
+        #region Kinect Sensor Instantiation
         private KinectSensor kinectSensor = null;
         private ColorFrameReader colorFrameReader = null;
         private WriteableBitmap colorBitmap = null;
         private string statusText = null;
+        #endregion
 
-        //#############################        Body parts objects         #################################
+
+        #region Body Parts Instantiation
         private const double HandSize = 30;
         private const double JointThickness = 3;
         private const double ClipBoundsThickness = 10;
@@ -47,18 +49,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         private int displayWidth;
         private int displayHeight;
         private List<Pen> bodyColors;
+        #endregion
 
         public MainWindow()
         {
-            //##########################    Colour Basics Stuff     ####################################
+            #region Kinect Instantiation
             this.kinectSensor = KinectSensor.GetDefault();
             this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
             this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
             FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
             this.colorBitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgr32, null);
+            #endregion
 
-            //#########################        Body Parts stuff       ###################################
-
+            #region Body Parts Initialisation
             // get the coordinate mapper
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
@@ -118,9 +121,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.bodyColors.Add(new Pen(Brushes.Blue, 6));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
+            #endregion
 
-
-            //Sensor initialisation
+            #region Kinect Sensor Open
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
             this.kinectSensor.Open();
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
@@ -130,12 +133,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.imageSource = new DrawingImage(this.drawingGroup);
             this.DataContext = this;
             this.InitializeComponent();
-
+#endregion
         }
 
-        /// #########################     GENERAL DISPLAY STUFF     ######################################
-
-        /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
+        #region Event Handler
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// Gets the bitmap to display
@@ -541,24 +542,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.SensorNotAvailableStatusText;
         }
+        #endregion
 
-
-
-
-
-
-
-
-
-
+        #region Exercises
         // Add exersise generics
 
 
         //asume joint2 is the common joint, #todo add error checking
         //use cosine rule to find angle at joint 2
-
-
-
 
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
@@ -609,18 +600,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             // head,neck,spineShoulder
             return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Head, JointType.Neck, JointType.SpineShoulder));
 
-
         }
-
-
-
-
-
-
-
-
-
-
+        #endregion
 
     }
 }
