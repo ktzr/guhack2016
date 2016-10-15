@@ -301,7 +301,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
                     // Draw a transparent background to set the render size
-                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+
+
+                    dc.DrawImage(colorBitmap, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
+
+                    dc.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
                     int penIndex = 0;
                     //dc.DrawRectangle(Brushes.DarkSeaGreen, new Pen(Brushes.Fuchsia,6.3), new Rect(45.3, 82.5, this.displayWidth, this.displayHeight));
                     //dc.DrawLine(new Pen(Brushes.Gray, 30), new Point(0, 0), new Point(200, 200));
