@@ -549,7 +549,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
             //fix this 
             // neck,spineshoulder,spineMid,spineBase
             return tolerance < getAngleOfSeperation(neck, spineShoulder, spineMid) ||
-                   tolerance < getAngleOfSeperation(spineShoulder, spineMid, spineBase)
+                   tolerance < getAngleOfSeperation(spineShoulder, spineMid, spineBase);
 
 
         }
@@ -565,7 +565,7 @@ namespace Microsoft.Samples.Kinect.BodyBasics
                                         )
         {
             // head,neck,spineShoulder
-            return tolerance < getAngleOfSeperation(head, neck, spineShoulder)
+            return tolerance < getAngleOfSeperation(head, neck, spineShoulder);
 
         }
 
