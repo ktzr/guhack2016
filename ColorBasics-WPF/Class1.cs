@@ -128,6 +128,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft))
                 {
                     //todo congradulate
+                    Exersise.hasStarted = false;
                     return 1; 
                 }
             }
