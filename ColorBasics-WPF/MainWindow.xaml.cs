@@ -315,41 +315,41 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                         if (!exersiseFinished)
                         {
-
-                        //end when function returns 1
-                        int exersiseCode = Exersise.moveLeftArm(body,3);
-                        if (exersiseCode != -72)
-                            { Console.WriteLine(exersiseCode); 
-                            switch (exersiseCode)
+                            //end when function returns 1
+                            int exersiseCode = Exersise.moveLeftArm(body, 3);
+                            if (exersiseCode != -72)
                             {
-                                case -1:
-                                    //todo function fix spine
-                                    spineMsg.Visibility = System.Windows.Visibility.Visible;
-                                    break;
-                                case -2:
-                                    armMsg.Visibility = System.Windows.Visibility.Visible;
-                                    //todo function straighten arm
-                                    break;
-                                case -100:
+                                Console.WriteLine(exersiseCode);
+                                switch (exersiseCode)
+                                {
+                                    case -1:
+                                        //todo function fix spine
+                                        spineMsg.Visibility = System.Windows.Visibility.Visible;
+                                        break;
+                                    case -2:
+                                        armMsg.Visibility = System.Windows.Visibility.Visible;
+                                        //todo function straighten arm
+                                        break;
+                                    case -100:
                                         spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                                         armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        Tuple<Point,Point> drawPoints =Exersise.printStartProjection(body, dc );
+                                        Tuple<Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
                                         dc.DrawLine(new Pen(Brushes.Gray, 3000), drawPoints.Item1, drawPoints.Item2);
                                         //while (true) { Console.WriteLine("i hate git"); }
                                         break;
-                                case 1:
-                                    exersiseFinished = true;
-                                    //endMsg.Visibility = System.Windows.Visibility.Visible;
-                                    //todo end the exersise, say well done and all that good stuff
-                                    break;
+                                    case 1:
+                                        exersiseFinished = true;
+                                        //endMsg.Visibility = System.Windows.Visibility.Visible;
+                                        //todo end the exersise, say well done and all that good stuff
+                                        break;
 
-                                case 0:
-                                    spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                    armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                    break;
+                                    case 0:
+                                        spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        armMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        break;
 
+                                }
                             }
-                        }
                         }
 
 
@@ -567,7 +567,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double b = lengthBetweenJoints(body, joint1, joint2);
             double c = lengthBetweenJoints(body, joint1, joint3);
 
-            return Math.Acos((a * a + b * b - c * c) / (2 * a * b))*180/Math.PI;
+            return Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math.PI;
         }
 
         /// <summary>
@@ -591,7 +591,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //fix this
             // neck,spineshoulder,spineMid,spineBase
-            return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid) )||
+            return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid)) ||
                    tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid, JointType.SpineBase));
 
 

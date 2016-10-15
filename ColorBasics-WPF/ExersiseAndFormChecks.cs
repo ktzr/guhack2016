@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Kinect;
 using System.Windows;
 using System.Windows.Media;
+using System.Globalization;
 
 namespace Microsoft.Samples.Kinect.ColorBasics
 {
@@ -24,15 +25,15 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             double output = Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math.PI;
             return output;
-/*
-            if (output.Equals(double.NaN))
-            {
-                return 180.0;
-            }
-            else
-            {
-            }*/
-        }   
+            /*
+                        if (output.Equals(double.NaN))
+                        {
+                            return 180.0;
+                        }
+                        else
+                        {
+                        }*/
+        }
 
         /// <summary>
         /// Calculates length between two joints.
@@ -59,7 +60,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             Console.Write("\n");
 
 
-            Console.WriteLine(tolerance> Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
+            Console.WriteLine(tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
             return tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3));
 
 
@@ -104,7 +105,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
 
-    }static class Exersise {
+    }
+    static class Exersise
+    {
         static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete
@@ -112,7 +115,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         ///
         public static int moveLeftArm(Body body, double tolerance)
         {
-            
+
             JointType SpineShoulder = JointType.SpineShoulder;
             JointType ShoulderLeft = JointType.ShoulderLeft;
             JointType ElbowLeft = JointType.ElbowLeft;
@@ -129,13 +132,13 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     return -72;
                 }
             }
-                
-            if (!CheckBodyForm.isSpineStraight(body, tolerance)&& !Exersise.hasStarted)
+
+            if (!CheckBodyForm.isSpineStraight(body, tolerance) && !Exersise.hasStarted)
             {
                 return -1;
                 //todo  msg strighten spine
             }
-            if (!CheckBodyForm.isSraight(body, tolerance+10, ShoulderLeft, ElbowLeft, WristLeft)&&!Exersise.hasStarted)
+            if (!CheckBodyForm.isSraight(body, tolerance + 10, ShoulderLeft, ElbowLeft, WristLeft) && !Exersise.hasStarted)
             {
                 return -2;
                 //todo  msg strighten arm
@@ -149,12 +152,12 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     Exersise.hasStarted = true;
                 }
                 return -100;
-                
+
             }
             else
             {
                 //todo promp to go to end angle  (draw box/line showing where arm should be)
-                if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft)&& body.Joints[WristLeft].Position.Y> body.Joints[ShoulderLeft].Position.Y)
+                if (CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) && body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
                 {
                     //todo congradulate
                     Exersise.hasStarted = false;
@@ -163,29 +166,29 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             return -100;
         }
-        public static Tuple<Point,Point> printStartProjection(Body body , DrawingContext drawingContext)
+        public static Tuple<Point, Point> printStartProjection(Body body, DrawingContext drawingContext)
         {
-          double startAngle = 120;
-          double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft)+
-                              CheckBodyForm.lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);
-          double accuteAngle = startAngle - 90.0;
-          double projX = body.Joints[JointType.ShoulderLeft].Position.X - armLength * Math.Sin((Math.PI*accuteAngle)/180);
-          double projY = body.Joints[JointType.ShoulderLeft].Position.Y - armLength * Math.Cos((Math.PI*accuteAngle)/180);
+            double startAngle = 120;
+            double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft) +
+                                CheckBodyForm.lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);
+            double accuteAngle = startAngle - 90.0;
+            double sin = Math.Sin((Math.PI * accuteAngle) / 180);
+            double cos = Math.Cos((Math.PI * accuteAngle) / 180);
+            //call function map from deapth space to colour space
+            // then calculate dist using angle (angle can have -ve nums be carfull) 
+            ColorSpacePoint pointInColorSpace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.ShoulderLeft].Position);
+            double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.SpineShoulder].Position).Y) - (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToColorSpace(body.Joints[JointType.SpineBase].Position).Y));
 
 
+            double projX = pointInColorSpace.X + linelenght * sin;
+            double projY = pointInColorSpace.Y + linelenght * cos;
 
-            //todo make this work
-            //http://stackoverflow.com/questions/26456448/cannot-convert-microsoft-kinect-skeletonpoint-to-system-windows-point
-            DepthImagePoint depthPoint = Kinect.CoordinateMapper.MapSkeletonPointToDepthPoint(skeletonPoint.Position
-                 , Kinect.DepthStream.Format);
-
-            Point end = new Point(projX* (-1000), projY*(-1000));//, body.Joints[JointType.WristLeft].Position.Z);
-            Point start = new Point(body.Joints[JointType.ShoulderLeft].Position.X, body.Joints[JointType.ShoulderLeft].Position.Y);
-            Console.Write(start);
-            Console.Write(end);
+            Point start = new Point(pointInColorSpace.X, pointInColorSpace.Y);
+            Point end = new Point(projX, projY);
+            Console.WriteLine(start);
+            Console.WriteLine(end);
             Console.WriteLine("foo");
-            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), body.Joints[JointType.ShoulderLeft].Position
-, end);
+            drawingContext.DrawLine(new Pen(Brushes.Gray, 300), start, end);
             return Tuple.Create(start, end);
 
         }
@@ -209,6 +212,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }*/
 
     }
+
+
     class instructun
     {
 
@@ -216,3 +221,4 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     }
 
 }
+
