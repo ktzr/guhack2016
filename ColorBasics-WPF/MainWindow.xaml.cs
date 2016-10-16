@@ -271,9 +271,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-
-
-
         /// <summary>
         /// #####################       Handles the body frame data arriving from the sensor    #######################
         /// </summary>
@@ -426,7 +423,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// <param name="handState">state of the hand</param>
         /// <param name="handPosition">position of the hand</param>
         /// <param name="drawingContext">drawing context to draw to</param>
-        ///private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
+        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
         {
             switch (handState)
             {
@@ -574,11 +571,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             _mode = Mode.Exercise_3;
         }
-
-        private void Exercise_4(object sender, RoutedEventArgs e)
-        {
-            _mode = Mode.Exercise_4;
-        }
         private void Return(object sender, RoutedEventArgs e)
         {
             _mode = Mode.Return;
@@ -599,7 +591,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 
                 double startAngle = 110;
                 double endAngle = 110;
-                double angleTolerance = 3;
+                double angleTolerance = 5;
                 double armTolerance = 15;
 
                 //end when function returns 1
@@ -609,20 +601,29 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     switch (erxerciseCode)
                     {
                         case -1:
-                            //spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                         case -2:
-                            //larmMsg.Visibility = System.Windows.Visibility.Visible;
+                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            larmMsg.Visibility = System.Windows.Visibility.Visible;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
-                        /*case -100:
+                        case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
                             larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             Tuple<Point, Point> startPoints = Exercise.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
-                            break;*/
+                            break;
                         case 1:
                             //ends the erxercise, say well done and all that good stuff
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
                             exercise1Arm1 = true;
@@ -630,10 +631,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                         case -45:
                             Tuple<Point, Point> endPoints = Exercise.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), endPoints.Item1, endPoints.Item2);
-                            break;
-                        case 0:
-                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
 
                     }
@@ -647,30 +644,35 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     switch (erxercise2Code)
                     {
                         case -1:
-                            //spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                         case -2:
-                            //rarmMsg.Visibility = System.Windows.Visibility.Visible;
+                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            larmMsg.Visibility = System.Windows.Visibility.Visible;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                         case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
                             rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
                             Tuple<Point, Point> startPoints = Exercise1Part2.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Red, 13), startPoints.Item1, startPoints.Item2);
                             break;
                         case 1:
-                            //spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                            //rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             exercise1Arm2 = true;
                             break;
                         case -45:
                             Tuple<Point, Point> endPoints = Exercise1Part2.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Red, 13), endPoints.Item1, endPoints.Item2);
-                            break;
-                        case 0:
-                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                     }
 
@@ -680,8 +682,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (_mode == Mode.Exercise_2)
             {
-                double angleTolerance = 3;
-                double armTolerance = 3;
+                double angleTolerance = 5;
+                double armTolerance = 15;
 
 
                 int erxercise2op = Exercise2.bendLeftArm(body, angleTolerance, armTolerance);
@@ -758,10 +760,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     }
                 }
             }
-            if (_mode == Mode.Exercise_4)
-            {
-                return;
-            }
             if (_mode == Mode.Return)
             {
                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
@@ -777,7 +775,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             Exercise_1,
             Exercise_2,
             Exercise_3,
-            Exercise_4,
             Return,
         }
 

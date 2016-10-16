@@ -67,7 +67,6 @@
                 <Button Content="Exercise_1" Style="{StaticResource ButtonStyle}" Click="Exercise_1" />
                 <Button Content="Exercise_2" Style="{StaticResource ButtonStyle}" Click="Exercise_2" />
                 <Button Content="Exercise_3" Style="{StaticResource ButtonStyle}" Click="Exercise_3" />
-                <Button Content="Exercise_4" Style="{StaticResource ButtonStyle}" Click="Exercise_4" />
                 <Button Content="Return" Style="{StaticResource ButtonStyle}" Click="Return" />
             </StackPanel>
         </Grid>

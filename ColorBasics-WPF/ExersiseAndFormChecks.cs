@@ -123,15 +123,13 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
 
-            return -100;
-
             if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
             {
-                return -100;
+                return -1;
             }
             if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exercise.hasStarted)
             {
-                return -100;
+                return -2;
             }
             //draw box/line showing where arm should be
             if (Exercise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
@@ -141,7 +139,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (Exercise.hasStarted)
             {
-                return -100;
+                return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y < body.Joints[ShoulderLeft].Position.Y)
@@ -226,15 +224,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     return -72;
                 }
             }
-            return -100;
 
             if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
             {
-                return -100;
+                return -1;
             }
             if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exercise.hasStarted)
             {
-                return -100;
+                return -2;
             }
             // (draw box/line showing where arm should be)
             if (Exercise1Part2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
@@ -244,7 +241,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (Exercise1Part2.hasStarted)
             {
-                return -100;
+                return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y < body.Joints[ShoulderRight].Position.Y)
