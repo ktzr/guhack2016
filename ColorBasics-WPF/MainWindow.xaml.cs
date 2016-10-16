@@ -720,7 +720,44 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (_mode == Mode.Exercise_3)
             {
-                return;
+                {
+                    double angleTolerance = 3;
+                    double armTolerance = 3;
+
+
+                    int erxercise3op = Exercise3.bendRightArm(body, angleTolerance, armTolerance);
+                    if (erxercise3op != -72)
+                    {
+                        switch (erxercise3op)
+                        {
+                            case -1:
+                                spineMsg.Visibility = System.Windows.Visibility.Visible;
+                                break;
+                            case -100:
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                                Tuple<Point, Point> startPoints = Exercise3.printStartProjection(body);
+                                dc.DrawLine(new Pen(Brushes.Green, 13), startPoints.Item1, startPoints.Item2);
+                                break;
+                            case 1:
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                                endMsg.Visibility = System.Windows.Visibility.Visible;
+                                _mode = Mode.Return;
+                                break;
+                            case -45:
+                                Tuple<Point, Point, Point, Point> endPoints = Exercise3.printEndProjection(body);
+                                dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item1, endPoints.Item2);
+                                dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item3, endPoints.Item4);
+                                break;
+                            case 0:
+                                spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                                larmMsg.Visibility = System.Windows.Visibility.Hidden;
+                                break;
+
+                        }
+                    }
+                }
             }
             if (_mode == Mode.Exercise_4)
             {
@@ -731,6 +768,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
                 larmMsg.Visibility = System.Windows.Visibility.Hidden;
                 rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                endMsg.Visibility = System.Windows.Visibility.Hidden;
                 return;
             }
         }

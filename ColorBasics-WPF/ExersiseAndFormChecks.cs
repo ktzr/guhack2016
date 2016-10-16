@@ -67,7 +67,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             //fix this
             // neck,spineshoulder,spineMid,spineBase
-            return tolerance < Math.Abs(andgle - getAngleOfSeparation(body, joint1, joint2, joint3));
+            return tolerance > Math.Abs(andgle - getAngleOfSeparation(body, joint1, joint2, joint3));
 
 
 
@@ -377,7 +377,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
 
 
-            double midX = pointInDepthspace.X + linelenght/2;
+            double midX = pointInDepthspace.X + linelenght / 2;
             double midY = pointInDepthspace.Y;
 
             double endX = pointInDepthspace.X + linelenght / 2;
@@ -390,6 +390,96 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             return Tuple.Create(start, mid, mid, end);
 
         }
+
+    }
+
+    static class Exercise3
+    {
+        static Boolean hasStarted = false;
+    /// <summary>
+    /// function returns 1 when task complete
+    /// </summary>
+    ///
+    public static int bendRightArm(Body body, double tolerance, double armTolerance)
+    {
+
+        JointType SpineShoulder = JointType.SpineShoulder;
+        JointType ShoulderRight = JointType.ShoulderRight;
+        JointType ElbowRight = JointType.ElbowRight;
+        JointType WristRight = JointType.WristRight;
+
+        JointType[] bodyParts = new JointType[] { SpineShoulder, ShoulderRight, ElbowRight, WristRight };
+        foreach (JointType part in bodyParts)
+        {
+            if (body.Joints[part].TrackingState != TrackingState.Tracked)
+            {
+                return -72;
+            }
+        }
+
+        if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
+        {
+            return -1;
+        }
+
+        if (hasStarted &&
+            CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight) &&
+            CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderRight, ElbowRight, WristRight) &&
+            body.Joints[WristRight].Position.Y > body.Joints[ShoulderRight].Position.Y)
+        {
+            return 1;
+        }
+        if (hasStarted)
+        {
+            return -45;
+        }
+        if (CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight))
+        {
+            hasStarted = true;
+        }
+
+        return -100;
+    }
+    public static Tuple<Point, Point> printStartProjection(Body body)//, double startAngle)
+    {
+        DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderRight].Position);
+        double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineShoulder].Position).Y) -
+            (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
+
+
+        double projX = pointInDepthspace.X - linelenght;
+        double projY = pointInDepthspace.Y;
+
+        Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
+        Point end = new Point(projX, projY);
+
+
+
+        return Tuple.Create(start, end);
+
+    }
+
+    public static Tuple<Point, Point, Point, Point> printEndProjection(Body body)
+    {
+
+        DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderRight].Position);
+        double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineShoulder].Position).Y) -
+            (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
+
+
+        double midX = pointInDepthspace.X - linelenght / 2;
+        double midY = pointInDepthspace.Y;
+
+        double endX = pointInDepthspace.X - linelenght / 2;
+        double endY = pointInDepthspace.Y + linelenght / 2;
+
+        Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
+        Point mid = new Point(midX, midY);
+        Point end = new Point(endX, endY);
+
+        return Tuple.Create(start, mid, mid, end);
+
+    }
 
     }
 
