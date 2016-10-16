@@ -174,10 +174,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
             Point end = new Point(projX, projY);
 
-            // todo REMOVE
-            Console.Write(start.X + " "); Console.Write(body.Joints[JointType.ShoulderLeft].Position.X + "\n");
-            Console.Write(start.Y + " "); Console.Write(body.Joints[JointType.ShoulderLeft].Position.Y + "\n");
-
             return Tuple.Create(start, end);
 
         }
@@ -213,7 +209,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     }
 
 
-    static class Exersise2
+    static class Exersise1Part2
     {
         static Boolean hasStarted = false;
         /// <summary>
@@ -246,20 +242,20 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 return -2;
             }
             //todo promp to go to end angle  (draw box/line showing where arm should be)
-            if (Exersise2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
+            if (Exersise1Part2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y > body.Joints[ShoulderRight].Position.Y)
             {
                 //todo congradulate
                 return 1;
             }
-            if (Exersise2.hasStarted)
+            if (Exersise1Part2.hasStarted)
             {
                 return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y < body.Joints[ShoulderRight].Position.Y)
             {
-                Exersise2.hasStarted = true;
+                Exersise1Part2.hasStarted = true;
             }
 
             return -100;
@@ -316,14 +312,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
     }
 
-    static class Exersise3
+    static class Exersise2
     {
         static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete
         /// </summary>
         ///
-        public static int bendLeftArm(Body body, double tolerance, double armTolerance, double startAngle, double endAngle)
+        public static int bendLeftArm(Body body, double tolerance, double armTolerance)
         {
 
             JointType SpineShoulder = JointType.SpineShoulder;
@@ -345,14 +341,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 return -1;
             }
 
-            //use this if to see if started 
-            //if (!CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))//&& !Exersise.hasStarted)
-            //{
-            //    return -2;
-            //}
-
-
-            //todo promp to go to end angle  (draw box/line showing where arm should be)
             if (hasStarted &&
                 CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderLeft, ElbowLeft, WristLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
@@ -390,7 +378,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         }
 
-        public static Tuple<Point, Point, Point, Point> printEndProjection(Body body, double endAngle)
+        public static Tuple<Point, Point, Point, Point> printEndProjection(Body body)
         {
 
             DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderLeft].Position);
