@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Color Basics" 
-        Height="970" Width="1080" 
+        Height="1080" Width="1920" 
         Closing="MainWindow_Closing">
     <Window.Resources>
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
@@ -57,6 +57,18 @@
         <TextBlock Name="armMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your left arm</TextBlock>
         <TextBlock Name="endMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="40" Visibility="Hidden">Well done</TextBlock>
 
+        <Image Name="camera" />
+        <Canvas Name="canvas" />
+        <Grid Style="{StaticResource GridButtonsStyle}" Grid.Row="1">
+            <StackPanel Style="{StaticResource StackPanelButtonsStyle}">
+                <Button Content="Exercise_1" Style="{StaticResource ButtonStyle}" Click="Exercise_1" />
+                <Button Content="Exercise_2" Style="{StaticResource ButtonStyle}" Click="Exercise_2" />
+                <Button Content="Exercise_3" Style="{StaticResource ButtonStyle}" Click="Exercise_3" />
+                <Button Content="Exercise_4" Style="{StaticResource ButtonStyle}" Click="Exercise_4" />
+                <Button Content="Return" Style="{StaticResource ButtonStyle}" Click="Return" />
+            </StackPanel>
+        </Grid>
+
 
 
         <!--<Button Grid.Row="2" Style="{StaticResource ScreenshotButton}" Content="Screenshot" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10 10 0 10" Click="ScreenshotButton_Click" />-->
@@ -64,5 +76,7 @@
         <!--<StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Content="{Binding StatusText}" />
         </StatusBar>-->
+        
     </Grid>
+    
 </Window>

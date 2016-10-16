@@ -168,6 +168,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
         public static Tuple<Point, Point, Point, Point> printStartProjection(Body body, DrawingContext drawingContext)
         {
+
             double startAngle = 120;
             double armLength = CheckBodyForm.lengthBetweenJoints(body, JointType.ShoulderLeft, JointType.ElbowLeft) +
                                 CheckBodyForm.lengthBetweenJoints(body, JointType.ElbowLeft, JointType.WristLeft);

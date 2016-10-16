@@ -15,12 +15,16 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
+    using Microsoft.Kinect.Wpf.Controls;
+    using Microsoft.Kinect.Toolkit.Input;
 
     /// <summary>
     /// Interaction logic for MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+
+        Mode _mode = Mode.Return;
         #region Kinect Sensor Instantiation
         private KinectSensor kinectSensor = null;
         private ColorFrameReader colorFrameReader = null;
@@ -301,8 +305,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
-                    // Draw a transparent background to set the render size
-
 
                     dc.DrawImage(colorBitmap, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
@@ -313,51 +315,52 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                     foreach (Body body in this.bodies)
                     {
+                        Return_Exercise(body, dc);
 
 
-                        //for testing remove at some point
-                        Boolean exersiseFinished = false;
+                        ////for testing remove at some point
+                        //Boolean exersiseFinished = false;
 
-                        if (!exersiseFinished)
-                        {
-                            //end when function returns 1
-                            int exersiseCode = Exersise.moveLeftArm(body, 3);
-                            if (exersiseCode != -72)
-                            {
-                                Console.WriteLine(exersiseCode);
-                                switch (exersiseCode)
-                                {
-                                    case -1:
-                                        //todo function fix spine
-                                        spineMsg.Visibility = System.Windows.Visibility.Visible;
-                                        break;
-                                    case -2:
-                                        armMsg.Visibility = System.Windows.Visibility.Visible;
-                                        //todo function straighten arm
-                                        break;
-                                    case -100:
-                                        spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        Tuple<Point, Point, Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
-                                        dc.DrawLine(new Pen(Brushes.Blue, 13), drawPoints.Item3, drawPoints.Item4);
-                                        dc.DrawLine(new Pen(Brushes.Gray, 13), drawPoints.Item1, drawPoints.Item2);
-                                        //dc.DrawText("start"., drawPoints.Item1);
-                                        //while (true) { Console.WriteLine("i hate git"); }
-                                        break;
-                                    case 1:
-                                        exersiseFinished = true;
-                                        //endMsg.Visibility = System.Windows.Visibility.Visible;
-                                        //todo end the exersise, say well done and all that good stuff
-                                        break;
+                        //if (!exersiseFinished)
+                        //{
+                        //    //end when function returns 1
+                        //    int exersiseCode = Exersise.moveLeftArm(body, 3);
+                        //    if (exersiseCode != -72)
+                        //    {
+                        //        Console.WriteLine(exersiseCode);
+                        //        switch (exersiseCode)
+                        //        {
+                        //            case -1:
+                        //                //todo function fix spine
+                        //                spineMsg.Visibility = System.Windows.Visibility.Visible;
+                        //                break;
+                        //            case -2:
+                        //                armMsg.Visibility = System.Windows.Visibility.Visible;
+                        //                //todo function straighten arm
+                        //                break;
+                        //            case -100:
+                        //                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                        //                armMsg.Visibility = System.Windows.Visibility.Collapsed;
+                        //                Tuple<Point, Point, Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
+                        //                dc.DrawLine(new Pen(Brushes.Blue, 13), drawPoints.Item3, drawPoints.Item4);
+                        //                dc.DrawLine(new Pen(Brushes.Gray, 13), drawPoints.Item1, drawPoints.Item2);
+                        //                //dc.DrawText("start"., drawPoints.Item1);
+                        //                //while (true) { Console.WriteLine("i hate git"); }
+                        //                break;
+                        //            case 1:
+                        //                exersiseFinished = true;
+                        //                //endMsg.Visibility = System.Windows.Visibility.Visible;
+                        //                //todo end the exersise, say well done and all that good stuff
+                        //                break;
 
-                                    case 0:
-                                        spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                        break;
+                        //            case 0:
+                        //                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                        //                armMsg.Visibility = System.Windows.Visibility.Collapsed;
+                        //                break;
 
-                                }
-                            }
-                        }
+                        //        }
+                        //    }
+                        //}
 
 
                         Pen drawPen = this.bodyColors[penIndex++];
@@ -546,7 +549,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
         #endregion
 
-        #region Exercises
+        #region Methods
         // Add exersise generics
 
 
@@ -604,6 +607,106 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
         }
         #endregion
+
+        #region Modes
+        private void Exercise_1(object sender, RoutedEventArgs e)
+        {
+            _mode = Mode.Exercise_1;
+        }
+
+        private void Exercise_2(object sender, RoutedEventArgs e)
+        {
+            _mode = Mode.Exercise_2;
+        }
+
+        private void Exercise_3(object sender, RoutedEventArgs e)
+        {
+            _mode = Mode.Exercise_3;
+        }
+
+        private void Exercise_4(object sender, RoutedEventArgs e)
+        {
+            _mode = Mode.Exercise_4;
+        }
+        private void Return(object sender, RoutedEventArgs e)
+        {
+            _mode = Mode.Return;
+        }
+        #endregion
+
+        void Return_Exercise(Body body, DrawingContext dc)
+        {
+            if (_mode == Mode.Exercise_1)
+            {
+                        //for testing remove at some point
+                        Boolean exersiseFinished = false;
+
+                        if (!exersiseFinished)
+                        {
+                            //end when function returns 1
+                            int exersiseCode = Exersise.moveLeftArm(body, 3);
+                            if (exersiseCode != -72)
+                            {
+                                Console.WriteLine(exersiseCode);
+                                switch (exersiseCode)
+                                {
+                                    case -1:
+                                        //todo function fix spine
+                                        spineMsg.Visibility = System.Windows.Visibility.Visible;
+                                        break;
+                                    case -2:
+                                        armMsg.Visibility = System.Windows.Visibility.Visible;
+                                        //todo function straighten arm
+                                        break;
+                                    case -100:
+                                        spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        armMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        Tuple<Point, Point, Point, Point> drawPoints = Exersise.printStartProjection(body, dc);
+                                        dc.DrawLine(new Pen(Brushes.Blue, 13), drawPoints.Item3, drawPoints.Item4);
+                                        dc.DrawLine(new Pen(Brushes.Gray, 13), drawPoints.Item1, drawPoints.Item2);
+                                        //dc.DrawText("start"., drawPoints.Item1);
+                                        //while (true) { Console.WriteLine("i hate git"); }
+                                        break;
+                                    case 1:
+                                        exersiseFinished = true;
+                                        //endMsg.Visibility = System.Windows.Visibility.Visible;
+                                        //todo end the exersise, say well done and all that good stuff
+                                        break;
+
+                                    case 0:
+                                        spineMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        armMsg.Visibility = System.Windows.Visibility.Collapsed;
+                                        break;
+                            }
+                        }
+                    }
+                }
+                if (_mode == Mode.Exercise_2)
+                {
+                    return;
+                }
+                if (_mode == Mode.Exercise_3)
+                {
+                    return;
+                }
+                if (_mode == Mode.Exercise_4)
+                {
+                    return;
+                }
+                if (_mode == Mode.Return)
+                {
+                    return;
+                }
+            }
+
+        public enum Mode
+        {
+            Exercise_1,
+            Exercise_2,
+            Exercise_3,
+            Exercise_4,
+            Return,
+        }
 
     }
 }
