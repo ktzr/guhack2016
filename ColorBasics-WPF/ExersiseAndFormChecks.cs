@@ -342,6 +342,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
 
             if (hasStarted &&
+                CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderLeft, ElbowLeft, WristLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
@@ -352,7 +353,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -45;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))
+            if (CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))
             {
                 hasStarted = true;
             }
@@ -386,7 +387,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
 
 
-            double midX = pointInDepthspace.X + linelenght;
+            double midX = pointInDepthspace.X + linelenght/2;
             double midY = pointInDepthspace.Y;
 
             double endX = pointInDepthspace.X + linelenght / 2;
