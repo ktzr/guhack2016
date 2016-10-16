@@ -2,7 +2,7 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Color Basics" 
-        Height="1080" Width="1920" 
+        Height="1060" Width="1920" 
         Closing="MainWindow_Closing">
     <Window.Resources>
         <SolidColorBrush x:Key="MediumGreyBrush" Color="#ff6e6e6e" />
@@ -44,30 +44,24 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <Image Grid.Row="0" HorizontalAlignment="Left" Source="Images\Logo.png" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5" />
+        <!--<Image Grid.Row="0" HorizontalAlignment="Left" Source="Images\Logo.png" Stretch="Fill" Height="32" Width="81" Margin="0 10 0 5" />-->
+        <Image Grid.Row="0" HorizontalAlignment="Left" Source="Stroke.png" Stretch="None" Height="128" Width="169" Margin="10,10,0,0" VerticalAlignment="Top" Grid.RowSpan="2" RenderTransformOrigin="0.932,0.808"/>
         <!--<TextBlock Grid.Row="0" HorizontalAlignment="Right" Margin="0 0 -1 0" VerticalAlignment="Bottom" Foreground="{StaticResource MediumGreyBrush}" FontFamily="Segoe UI" FontSize="18">Color Basics</TextBlock>-->
         <!--<Image Grid.Row="0" Source="Images\Status.png" Stretch="None" HorizontalAlignment="Center" Margin="0 0 0 5" />-->
 
-        <Viewbox Grid.Row="1" HorizontalAlignment="Center">
-            <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
-        </Viewbox>
+        <Image Name="camera" Margin="-10,0,10,0" HorizontalAlignment="Right" Width="1892" />
+        <Canvas Name="canvas" >
+            <Viewbox Height="1080" Width="1920" VerticalAlignment="Bottom" Canvas.Top="-31">
+                <Image  ClipToBounds="True" Source="{Binding ImageSource}" Stretch="UniformToFill" />
+            </Viewbox>
+        </Canvas>
 
-        <TextBlock Name="spineMsg" Height="102" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="707,45,487,357" FontWeight="Black" FontSize="50" Visibility="Visible" Width="698">Straighten your spine</TextBlock>
-        <TextBlock Name="larmMsg" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="103,185,1151,141" FontWeight="Black" FontSize="50" Visibility="Visible" Width="638">Straighten your left arm</TextBlock>
-        <TextBlock Name="rarmMsg" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1179,185,-82,141" FontWeight="Black" FontSize="50" Visibility="Visible" Width="795">Straighten your right arm</TextBlock>
-        <TextBlock Name="endMsg" Height="209" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="595,365,593,475" FontSize="100" FontWeight ="Black" Visibility="Visible" RenderTransformOrigin="4.722,15.783" Width="704" Grid.RowSpan="2">
-            <TextBlock.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform/>
-                    <SkewTransform/>
-                    <RotateTransform Angle="1.006"/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </TextBlock.RenderTransform>Well done!</TextBlock>
+        <TextBlock Name="spineMsg" Height="83" Margin="698,10,644,956" FontWeight="Black" FontSize="50" Visibility="Hidden" Width="550">Straighten your spine</TextBlock>
+        <TextBlock Name="larmMsg" Height="84"  Margin="10,134,1267,831" FontWeight="Black" FontSize="50" Visibility="Hidden" Width="615">Straighten your left arm</TextBlock>
+        <TextBlock Name="rarmMsg" Height="84" Margin="1237,134,10,831" FontWeight="Black" FontSize="50" Visibility="Hidden" Width="645">Straighten your right arm</TextBlock>
+        <TextBlock Name="endMsg" Height="141" Margin="710,98,655,810" FontSize="100" FontWeight ="Black" Visibility="Hidden" Width="527">Well done!</TextBlock>
 
-        <Image Name="camera" Margin="0,-10,0,10" />
-        <Canvas Name="canvas" />
-        <Grid Style="{StaticResource GridButtonsStyle}" Grid.Row="1">
+        <Grid Style="{StaticResource GridButtonsStyle}" VerticalAlignment="Bottom" Margin="10,0,0,30" Height="68" RenderTransformOrigin="0.5,0.5">
             <StackPanel Style="{StaticResource StackPanelButtonsStyle}">
                 <Button Content="Exercise_1" Style="{StaticResource ButtonStyle}" Click="Exercise_1" />
                 <Button Content="Exercise_2" Style="{StaticResource ButtonStyle}" Click="Exercise_2" />
@@ -78,6 +72,7 @@
         </Grid>
 
 
+        <Image HorizontalAlignment="Left" Source="Stroke.png" Stretch="None" Height="83" Width="124" Margin="0,342,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.932,0.808"/>
 
         <!--<Button Grid.Row="2" Style="{StaticResource ScreenshotButton}" Content="Screenshot" Height="Auto" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="10 10 0 10" Click="ScreenshotButton_Click" />-->
 

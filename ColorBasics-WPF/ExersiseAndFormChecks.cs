@@ -90,7 +90,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// </summary>
         public static Boolean isNeckStraight(Body body, double tolerance)
         {
-            // head,neck,spineShoulder
+            // head,neck
             return tolerance > Math.Abs(180 - getAngleOfSeparation(body, JointType.Head, JointType.Neck, JointType.SpineShoulder));
 
 
@@ -99,7 +99,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
     }
-    static class Exersise
+    static class Exercise
     {
         static Boolean hasStarted = false;
         /// <summary>
@@ -123,28 +123,28 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
 
-            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exercise.hasStarted)
             {
                 return -2;
             }
             //draw box/line showing where arm should be
-            if (Exersise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
+            if (Exercise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
                 return 1;
             }
-            if (Exersise.hasStarted)
+            if (Exercise.hasStarted)
             {
                 return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y < body.Joints[ShoulderLeft].Position.Y)
             {
-                Exersise.hasStarted = true;
+                Exercise.hasStarted = true;
             }
 
             return -100;
@@ -201,7 +201,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     }
 
 
-    static class Exersise1Part2
+    static class Exercise1Part2
     {
         static Boolean hasStarted = false;
         /// <summary>
@@ -225,28 +225,28 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
 
-            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exercise.hasStarted)
             {
                 return -2;
             }
             // (draw box/line showing where arm should be)
-            if (Exersise1Part2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
+            if (Exercise1Part2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y > body.Joints[ShoulderRight].Position.Y)
             {
                 return 1;
             }
-            if (Exersise1Part2.hasStarted)
+            if (Exercise1Part2.hasStarted)
             {
                 return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y < body.Joints[ShoulderRight].Position.Y)
             {
-                Exersise1Part2.hasStarted = true;
+                Exercise1Part2.hasStarted = true;
             }
 
             return -100;
@@ -303,7 +303,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
     }
 
-    static class Exersise2
+    static class Exercise2
     {
         static Boolean hasStarted = false;
         /// <summary>
@@ -327,7 +327,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
 
-            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exercise.hasStarted)
             {
                 return -1;
             }
