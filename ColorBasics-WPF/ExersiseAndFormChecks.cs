@@ -52,7 +52,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// <summary>
         /// Returns true is 3 joints are strate within tolerance.
         /// </summary>
-        public static Boolean isSraight(Body body, double tolerance, JointType joint1, JointType joint2, JointType joint3)
+        public static Boolean isStraight(Body body, double tolerance, JointType joint1, JointType joint2, JointType joint3)
         {
             return tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3));
 
@@ -127,7 +127,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exercise.hasStarted)
+            if (!CheckBodyForm.isStraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exercise.hasStarted)
             {
                 return -2;
             }
@@ -229,7 +229,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exercise.hasStarted)
+            if (!CheckBodyForm.isStraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exercise.hasStarted)
             {
                 return -2;
             }
@@ -333,7 +333,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
 
             if (hasStarted &&
-                CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft) &&
+                CheckBodyForm.isStraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderLeft, ElbowLeft, WristLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
@@ -343,7 +343,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -45;
             }
-            if (CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))
+            if (CheckBodyForm.isStraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))
             {
                 hasStarted = true;
             }
@@ -423,7 +423,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         if (hasStarted &&
-            CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight) &&
+            CheckBodyForm.isStraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight) &&
             CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderRight, ElbowRight, WristRight) &&
             body.Joints[WristRight].Position.Y > body.Joints[ShoulderRight].Position.Y)
         {
@@ -433,7 +433,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             return -45;
         }
-        if (CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight))
+        if (CheckBodyForm.isStraight(body, armTolerance, SpineShoulder, ShoulderRight, ElbowRight))
         {
             hasStarted = true;
         }

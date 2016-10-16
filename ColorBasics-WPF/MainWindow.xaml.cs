@@ -337,8 +337,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                             this.DrawBody(joints, jointPoints, dc, drawPen);
 
-                            this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
-                            this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
+                            //this.DrawHand(body.HandLeftState, jointPoints[JointType.HandLeft], dc);
+                            //this.DrawHand(body.HandRightState, jointPoints[JointType.HandRight], dc);
                         }
                     }
 
@@ -417,29 +417,29 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             drawingContext.DrawLine(drawPen, jointPoints[jointType0], jointPoints[jointType1]);
         }
 
-        /// <summary>
-        /// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
-        /// </summary>
-        /// <param name="handState">state of the hand</param>
-        /// <param name="handPosition">position of the hand</param>
-        /// <param name="drawingContext">drawing context to draw to</param>
-        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
-        {
-            switch (handState)
-            {
-                case HandState.Closed:
-                    drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
-                    break;
+        ///// <summary>
+        ///// Draws a hand symbol if the hand is tracked: red circle = closed, green circle = opened; blue circle = lasso
+        ///// </summary>
+        ///// <param name="handState">state of the hand</param>
+        ///// <param name="handPosition">position of the hand</param>
+        ///// <param name="drawingContext">drawing context to draw to</param>
+        //private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
+        //{
+        //    switch (handState)
+        //    {
+        //        case HandState.Closed:
+        //            drawingContext.DrawEllipse(this.handClosedBrush, null, handPosition, HandSize, HandSize);
+        //            break;
 
-                case HandState.Open:
-                    drawingContext.DrawEllipse(this.handOpenBrush, null, handPosition, HandSize, HandSize);
-                    break;
+        //        case HandState.Open:
+        //            drawingContext.DrawEllipse(this.handOpenBrush, null, handPosition, HandSize, HandSize);
+        //            break;
 
-                case HandState.Lasso:
-                    drawingContext.DrawEllipse(this.handLassoBrush, null, handPosition, HandSize, HandSize);
-                    break;
-            }
-        }
+        //        case HandState.Lasso:
+        //            drawingContext.DrawEllipse(this.handLassoBrush, null, handPosition, HandSize, HandSize);
+        //            break;
+        //    }
+        //}
 
         /// <summary>
         /// Draws indicators to show which edges are clipping body data
@@ -589,7 +589,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
 
                 
-                double startAngle = 110;
+                double startAngle = 120;
                 double endAngle = 110;
                 double angleTolerance = 5;
                 double armTolerance = 15;
@@ -609,7 +609,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                         case -2:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
                             larmMsg.Visibility = System.Windows.Visibility.Visible;
-                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                         case -100:
@@ -651,8 +650,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             break;
                         case -2:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                            larmMsg.Visibility = System.Windows.Visibility.Visible;
-                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Visible;
                             endMsg.Visibility = System.Windows.Visibility.Hidden;
                             break;
                         case -100:
@@ -671,13 +669,17 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             exercise1Arm2 = true;
                             break;
                         case -45:
+                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             Tuple<Point, Point> endPoints = Exercise1Part2.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Red, 13), endPoints.Item1, endPoints.Item2);
                             break;
                     }
 
                 }
-               
+
 
             }
             if (_mode == Mode.Exercise_2)
@@ -707,6 +709,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             _mode = Mode.Return;
                             break;
                         case -45:
+                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            endMsg.Visibility = System.Windows.Visibility.Hidden;
+                            larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             Tuple<Point, Point, Point, Point> endPoints = Exercise2.printEndProjection(body);
                             dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item1, endPoints.Item2);
                             dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item3, endPoints.Item4);
