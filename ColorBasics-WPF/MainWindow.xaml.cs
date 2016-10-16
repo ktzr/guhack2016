@@ -595,7 +595,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 double armTolerance = 15;
 
                 //end when function returns 1
-                int erxerciseCode = Exercise.moveLeftArm(body, angleTolerance, armTolerance, startAngle, endAngle);
+                int erxerciseCode = Exercise1Part1.moveLeftArm(body, angleTolerance, armTolerance, startAngle, endAngle);
                 if (erxerciseCode != -72)
                 {
                     switch (erxerciseCode)
@@ -616,7 +616,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Hidden;
-                            Tuple<Point, Point> startPoints = Exercise.printStartProjection(body, startAngle);
+                            Tuple<Point, Point> startPoints = Exercise1Part1.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
                             break;
                         case 1:
@@ -628,7 +628,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             exercise1Arm1 = true;
                             break;
                         case -45:
-                            Tuple<Point, Point> endPoints = Exercise.printEndProjection(body, endAngle);
+                            Tuple<Point, Point> endPoints = Exercise1Part1.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), endPoints.Item1, endPoints.Item2);
                             break;
 
@@ -768,8 +768,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (_mode == Mode.Return)
             {
-                Exercise.hasStarted = false;
+                Exercise1Part1.hasStarted = false;
                 Exercise1Part2.hasStarted = false;
+                Exercise2.hasStarted = false;
+                Exercise3.hasStarted = false;
                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
                 larmMsg.Visibility = System.Windows.Visibility.Hidden;
                 rarmMsg.Visibility = System.Windows.Visibility.Hidden;

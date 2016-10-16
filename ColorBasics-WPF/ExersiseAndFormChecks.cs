@@ -99,7 +99,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
 
     }
-    static class Exercise
+    static class Exercise1Part1
     {
         public static Boolean hasStarted = false;
         /// <summary>
@@ -132,19 +132,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 return -2;
             }
             //draw box/line showing where arm should be
-            if (Exercise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
+            if (Exercise1Part1.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
                 return 1;
             }
-            if (Exercise.hasStarted)
+            if (Exercise1Part1.hasStarted)
             {
                 return -45;
             }
             if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y < body.Joints[ShoulderLeft].Position.Y)
             {
-                Exercise.hasStarted = true;
+                Exercise1Part1.hasStarted = true;
             }
 
             return -100;
@@ -305,7 +305,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
     static class Exercise2
     {
-        static Boolean hasStarted = false;
+        public static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete
         /// </summary>
@@ -395,7 +395,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
     static class Exercise3
     {
-        static Boolean hasStarted = false;
+        public static Boolean hasStarted = false;
     /// <summary>
     /// function returns 1 when task complete
     /// </summary>
