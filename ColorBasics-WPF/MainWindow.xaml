@@ -52,12 +52,20 @@
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
         </Viewbox>
 
-        <TextBlock Name="spineMsg" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Collapsed">Strighten your spine</TextBlock>
-        <TextBlock Name="larmMsg" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Collapsed">Strighten your left arm</TextBlock>
-        <TextBlock Name="rarmMsg" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Collapsed">Strighten your right arm</TextBlock>
-        <TextBlock Name="endMsg" Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="40" Visibility="Collapsed">Well done</TextBlock>
+        <TextBlock Name="spineMsg" Height="102" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="707,45,487,357" FontWeight="Black" FontSize="50" Visibility="Visible" Width="698">Straighten your spine</TextBlock>
+        <TextBlock Name="larmMsg" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="103,185,1151,141" FontWeight="Black" FontSize="50" Visibility="Visible" Width="638">Straighten your left arm</TextBlock>
+        <TextBlock Name="rarmMsg" Height="178" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="1179,185,-82,141" FontWeight="Black" FontSize="50" Visibility="Visible" Width="795">Straighten your right arm</TextBlock>
+        <TextBlock Name="endMsg" Height="209" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="595,365,593,475" FontSize="100" FontWeight ="Black" Visibility="Visible" RenderTransformOrigin="4.722,15.783" Width="704" Grid.RowSpan="2">
+            <TextBlock.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="1.006"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </TextBlock.RenderTransform>Well done!</TextBlock>
 
-        <Image Name="camera" />
+        <Image Name="camera" Margin="0,-10,0,10" />
         <Canvas Name="canvas" />
         <Grid Style="{StaticResource GridButtonsStyle}" Grid.Row="1">
             <StackPanel Style="{StaticResource StackPanelButtonsStyle}">
@@ -76,7 +84,7 @@
         <!--<StatusBar Grid.Row="3" HorizontalAlignment="Stretch" Name="statusBar" VerticalAlignment="Bottom" Background="White" Foreground="{StaticResource MediumGreyBrush}">
             <StatusBarItem Content="{Binding StatusText}" />
         </StatusBar>-->
-        
+
     </Grid>
-    
+
 </Window>
