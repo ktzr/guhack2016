@@ -113,7 +113,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// function returns 1 when task complete
         /// </summary>
         ///
-        public static int moveLeftArm(Body body, double tolerance, double armTolerance,double startAngle, double endAngle)
+        public static int moveLeftArm(Body body, double tolerance, double armTolerance, double startAngle, double endAngle)
         {
 
             JointType SpineShoulder = JointType.SpineShoulder;
@@ -122,7 +122,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             JointType WristLeft = JointType.WristLeft;
 
             JointType[] bodyParts = new JointType[] { SpineShoulder, ShoulderLeft, ElbowLeft, WristLeft };
-             foreach (JointType part in bodyParts)
+            foreach (JointType part in bodyParts)
             {
                 if (body.Joints[part].TrackingState != TrackingState.Tracked)
                 {
@@ -130,16 +130,16 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
             }
 
-            if (!CheckBodyForm.isSpineStraight(body, tolerance) )//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exersise.hasStarted)
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft) )//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderLeft, ElbowLeft, WristLeft))//&& !Exersise.hasStarted)
             {
                 return -2;
             }
             //todo promp to go to end angle  (draw box/line showing where arm should be)
-            if (Exersise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) && 
+            if (Exersise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
                 //todo congradulate
@@ -149,7 +149,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -45;
             }
-            if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) && 
+            if (CheckBodyForm.isAtAngle(body, tolerance, startAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y < body.Joints[ShoulderLeft].Position.Y)
             {
                 Exersise.hasStarted = true;
@@ -220,7 +220,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// function returns 1 when task complete
         /// </summary>
         ///
-        public static int moveRightArm(Body body, double tolerance,double armTolerance, double startAngle, double endAngle)
+        public static int moveRightArm(Body body, double tolerance, double armTolerance, double startAngle, double endAngle)
         {
 
             JointType SpineShoulder = JointType.SpineShoulder;
@@ -241,7 +241,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -1;
             }
-            if (!CheckBodyForm.isSraight(body,  armTolerance , ShoulderRight, ElbowRight, WristRight))//&& !Exersise.hasStarted)
+            if (!CheckBodyForm.isSraight(body, armTolerance, ShoulderRight, ElbowRight, WristRight))//&& !Exersise.hasStarted)
             {
                 return -2;
             }
@@ -311,6 +311,104 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
             Point end = new Point(projX, projY);
             return Tuple.Create(start, end);
+
+        }
+
+    }
+
+    static class Exersise3
+    {
+        static Boolean hasStarted = false;
+        /// <summary>
+        /// function returns 1 when task complete
+        /// </summary>
+        ///
+        public static int bendLeftArm(Body body, double tolerance, double armTolerance, double startAngle, double endAngle)
+        {
+
+            JointType SpineShoulder = JointType.SpineShoulder;
+            JointType ShoulderLeft = JointType.ShoulderLeft;
+            JointType ElbowLeft = JointType.ElbowLeft;
+            JointType WristLeft = JointType.WristLeft;
+
+            JointType[] bodyParts = new JointType[] { SpineShoulder, ShoulderLeft, ElbowLeft, WristLeft };
+            foreach (JointType part in bodyParts)
+            {
+                if (body.Joints[part].TrackingState != TrackingState.Tracked)
+                {
+                    return -72;
+                }
+            }
+
+            if (!CheckBodyForm.isSpineStraight(body, tolerance))//&& !Exersise.hasStarted)
+            {
+                return -1;
+            }
+
+            //use this if to see if started 
+            //if (!CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))//&& !Exersise.hasStarted)
+            //{
+            //    return -2;
+            //}
+
+
+            //todo promp to go to end angle  (draw box/line showing where arm should be)
+            if (hasStarted && 
+                CheckBodyForm.isAtAngle(body, tolerance, 90,ShoulderLeft, ElbowLeft,WristLeft) &&
+                body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
+            {
+                //todo congradulate
+                return 1;
+            }
+            if (hasStarted)
+            {
+                return -45;
+            }
+            if (!CheckBodyForm.isSraight(body, armTolerance, SpineShoulder, ShoulderLeft, ElbowLeft))
+            {
+                hasStarted = true;
+            }
+
+            return -100;
+        }
+        public static Tuple<Point, Point> printStartProjection(Body body)//, double startAngle)
+        {
+            DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderLeft].Position);
+            double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineShoulder].Position).Y) -
+                (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
+
+
+            double projX = pointInDepthspace.X + linelenght;
+            double projY = pointInDepthspace.Y;
+
+            Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
+            Point end = new Point(projX, projY);
+
+
+
+            return Tuple.Create(start, end);
+
+        }
+
+        public static Tuple<Point, Point, Point, Point> printEndProjection(Body body, double endAngle)
+        {
+
+            DepthSpacePoint pointInDepthspace = KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.ShoulderLeft].Position);
+            double linelenght = ((KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineShoulder].Position).Y) -
+                (KinectSensor.GetDefault().CoordinateMapper.MapCameraPointToDepthSpace(body.Joints[JointType.SpineBase].Position).Y));
+
+
+            double midX = pointInDepthspace.X + linelenght;
+            double midY = pointInDepthspace.Y;
+
+            double endX = pointInDepthspace.X + linelenght / 2;
+            double endY = pointInDepthspace.Y + linelenght / 2;
+
+            Point start = new Point(pointInDepthspace.X, pointInDepthspace.Y);
+            Point mid = new Point(midX, midY);
+            Point end = new Point(endX, endY);
+
+            return Tuple.Create(start, mid, mid, end);
 
         }
 
