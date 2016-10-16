@@ -101,7 +101,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     }
     static class Exercise
     {
-        static Boolean hasStarted = false;
+        public static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete
         /// </summary>
@@ -203,7 +203,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
     static class Exercise1Part2
     {
-        static Boolean hasStarted = false;
+        public static Boolean hasStarted = false;
         /// <summary>
         /// function returns 1 when task complete
         /// </summary>

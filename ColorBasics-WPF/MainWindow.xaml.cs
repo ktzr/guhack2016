@@ -768,6 +768,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
             if (_mode == Mode.Return)
             {
+                Exercise.hasStarted = false;
+                Exercise1Part2.hasStarted = false;
                 spineMsg.Visibility = System.Windows.Visibility.Hidden;
                 larmMsg.Visibility = System.Windows.Visibility.Hidden;
                 rarmMsg.Visibility = System.Windows.Visibility.Hidden;
