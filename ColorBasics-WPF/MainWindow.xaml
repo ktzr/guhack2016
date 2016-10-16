@@ -52,7 +52,6 @@
             <Image Source="{Binding ImageSource}" Stretch="UniformToFill" />
         </Viewbox>
 
-        <TextBlock  Text="Raise your left hand above the line!" TextAlignment="Center"  VerticalAlignment="Center" FontSize="50" Margin="0,42,0,704" FontWeight="Bold" Height="146" Grid.Row="1"/>
         <TextBlock Name="spineMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your spine</TextBlock>
         <TextBlock Name="armMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="32" Visibility="Hidden">Strighten your left arm</TextBlock>
         <TextBlock Name="endMsg" Grid.Row="1"  Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="188,53,199,360" FontSize="40" Visibility="Hidden">Well done</TextBlock>

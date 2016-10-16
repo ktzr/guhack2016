@@ -3,7 +3,8 @@
 //     Copyright (c) Microsoft Corporation.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
-namespace Microsoft.Samples.Kinect.ColorBasics
+
+namespace Microsoft.Samples.Kinect.BodyBasics
 {
     using System;
     using System.Collections.Generic;
@@ -15,57 +16,125 @@ namespace Microsoft.Samples.Kinect.ColorBasics
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
-    using Microsoft.Kinect.Wpf.Controls;
-    using Microsoft.Kinect.Toolkit.Input;
 
     /// <summary>
     /// Interaction logic for MainWindow
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
-
-        Mode _mode = Mode.Return;
-        #region Kinect Sensor Instantiation
-        private KinectSensor kinectSensor = null;
-        private ColorFrameReader colorFrameReader = null;
-        private WriteableBitmap colorBitmap = null;
-        private string statusText = null;
-        #endregion
-
-
-        #region Body Parts Instantiation
+        /// <summary>
+        /// Radius of drawn hand circles
+        /// </summary>
         private const double HandSize = 30;
-        private const double JointThickness = 3;
-        private const double ClipBoundsThickness = 10;
-        private const float InferredZPositionClamp = 0.1f;
-        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0));
-        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0));
-        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255));
-        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
-        private readonly Brush inferredJointBrush = Brushes.Yellow;
-        private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
-        private DrawingGroup drawingGroup;
-        private DrawingImage imageSource;
-        private CoordinateMapper coordinateMapper = null;
-        private BodyFrameReader bodyFrameReader = null;
-        private Body[] bodies = null;
-        private List<Tuple<JointType, JointType>> bones;
-        private int displayWidth;
-        private int displayHeight;
-        private List<Pen> bodyColors;
-        #endregion
 
+        /// <summary>
+        /// Thickness of drawn joint lines
+        /// </summary>
+        private const double JointThickness = 3;
+
+        /// <summary>
+        /// Thickness of clip edge rectangles
+        /// </summary>
+        private const double ClipBoundsThickness = 10;
+
+        /// <summary>
+        /// Constant for clamping Z values of camera space points from being negative
+        /// </summary>
+        private const float InferredZPositionClamp = 0.1f;
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as closed
+        /// </summary>
+        private readonly Brush handClosedBrush = new SolidColorBrush(Color.FromArgb(128, 255, 0, 0));
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as opened
+        /// </summary>
+        private readonly Brush handOpenBrush = new SolidColorBrush(Color.FromArgb(128, 0, 255, 0));
+
+        /// <summary>
+        /// Brush used for drawing hands that are currently tracked as in lasso (pointer) position
+        /// </summary>
+        private readonly Brush handLassoBrush = new SolidColorBrush(Color.FromArgb(128, 0, 0, 255));
+
+        /// <summary>
+        /// Brush used for drawing joints that are currently tracked
+        /// </summary>
+        private readonly Brush trackedJointBrush = new SolidColorBrush(Color.FromArgb(255, 68, 192, 68));
+
+        /// <summary>
+        /// Brush used for drawing joints that are currently inferred
+        /// </summary>        
+        private readonly Brush inferredJointBrush = Brushes.Yellow;
+
+        /// <summary>
+        /// Pen used for drawing bones that are currently inferred
+        /// </summary>        
+        private readonly Pen inferredBonePen = new Pen(Brushes.Gray, 1);
+
+        /// <summary>
+        /// Drawing group for body rendering output
+        /// </summary>
+        private DrawingGroup drawingGroup;
+
+        /// <summary>
+        /// Drawing image that we will display
+        /// </summary>
+        private DrawingImage imageSource;
+
+        /// <summary>
+        /// Active Kinect sensor
+        /// </summary>
+        private KinectSensor kinectSensor = null;
+
+        /// <summary>
+        /// Coordinate mapper to map one type of point to another
+        /// </summary>
+        private CoordinateMapper coordinateMapper = null;
+
+        /// <summary>
+        /// Reader for body frames
+        /// </summary>
+        private BodyFrameReader bodyFrameReader = null;
+
+        /// <summary>
+        /// Array for the bodies
+        /// </summary>
+        private Body[] bodies = null;
+
+        /// <summary>
+        /// definition of bones
+        /// </summary>
+        private List<Tuple<JointType, JointType>> bones;
+
+        /// <summary>
+        /// Width of display (depth space)
+        /// </summary>
+        private int displayWidth;
+
+        /// <summary>
+        /// Height of display (depth space)
+        /// </summary>
+        private int displayHeight;
+
+        /// <summary>
+        /// List of colors for each body tracked
+        /// </summary>
+        private List<Pen> bodyColors;
+
+        /// <summary>
+        /// Current status text to display
+        /// </summary>
+        private string statusText = null;
+
+        /// <summary>
+        /// Initializes a new instance of the MainWindow class.
+        /// </summary>
         public MainWindow()
         {
-            #region Kinect Instantiation
+            // one sensor is currently supported
             this.kinectSensor = KinectSensor.GetDefault();
-            this.colorFrameReader = this.kinectSensor.ColorFrameSource.OpenReader();
-            this.colorFrameReader.FrameArrived += this.Reader_ColorFrameArrived;
-            FrameDescription colorFrameDescription = this.kinectSensor.ColorFrameSource.CreateFrameDescription(ColorImageFormat.Bgra);
-            this.colorBitmap = new WriteableBitmap(colorFrameDescription.Width, colorFrameDescription.Height, 96.0, 96.0, PixelFormats.Bgr32, null);
-            #endregion
 
-            #region Body Parts Initialisation
             // get the coordinate mapper
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
 
@@ -78,7 +147,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
             // open the reader for the body frames
             this.bodyFrameReader = this.kinectSensor.BodyFrameSource.OpenReader();
-            this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+
             // a bone defined as a line between two joints
             this.bones = new List<Tuple<JointType, JointType>>();
 
@@ -125,25 +194,38 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             this.bodyColors.Add(new Pen(Brushes.Blue, 6));
             this.bodyColors.Add(new Pen(Brushes.Indigo, 6));
             this.bodyColors.Add(new Pen(Brushes.Violet, 6));
-            #endregion
 
-            #region Kinect Sensor Open
+            // set IsAvailableChanged event notifier
             this.kinectSensor.IsAvailableChanged += this.Sensor_IsAvailableChanged;
+
+            // open the sensor
             this.kinectSensor.Open();
+
+            // set the status text
             this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
 
+            // Create the drawing group we'll use for drawing
             this.drawingGroup = new DrawingGroup();
+
+            // Create an image source that we can use in our image control
             this.imageSource = new DrawingImage(this.drawingGroup);
+
+            // use the window object as the view model in this simple example
             this.DataContext = this;
+
+            // initialize the components (controls) of the window
             this.InitializeComponent();
-#endregion
         }
 
-        #region Event Handler
+        /// <summary>
+        /// INotifyPropertyChangedPropertyChanged event to allow window controls to bind to changeable data
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
         /// Gets the bitmap to display
+        /// </summary>
         public ImageSource ImageSource
         {
             get
@@ -152,7 +234,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
+        /// <summary>
         /// Gets or sets the current status text to display
+        /// </summary>
         public string StatusText
         {
             get
@@ -176,17 +260,30 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
+        /// Execute start up tasks
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (this.bodyFrameReader != null)
+            {
+                this.bodyFrameReader.FrameArrived += this.Reader_FrameArrived;
+            }
+        }
+
+        /// <summary>
         /// Execute shutdown tasks
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
-            if (this.colorFrameReader != null)
+            if (this.bodyFrameReader != null)
             {
-                // ColorFrameReder is IDisposable
-                this.colorFrameReader.Dispose();
-                this.colorFrameReader = null;
+                // BodyFrameReader is IDisposable
+                this.bodyFrameReader.Dispose();
+                this.bodyFrameReader = null;
             }
 
             if (this.kinectSensor != null)
@@ -196,93 +293,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-
         /// <summary>
-        /// Handles the user clicking on the screenshot button
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void ScreenshotButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.colorBitmap != null)
-            {
-                // create a png bitmap encoder which knows how to save a .png file
-                BitmapEncoder encoder = new PngBitmapEncoder();
-
-                // create frame from the writable bitmap and add to encoder
-                encoder.Frames.Add(BitmapFrame.Create(this.colorBitmap));
-
-                string time = System.DateTime.Now.ToString("hh'-'mm'-'ss", CultureInfo.CurrentUICulture.DateTimeFormat);
-
-                string myPhotos = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
-
-                string path = Path.Combine(myPhotos, "KinectScreenshot-Color-" + time + ".png");
-
-                // write the new file to disk
-                try
-                {
-                    // FileStream is IDisposable
-                    using (FileStream fs = new FileStream(path, FileMode.Create))
-                    {
-                        encoder.Save(fs);
-                    }
-
-                    this.StatusText = string.Format(Properties.Resources.SavedScreenshotStatusTextFormat, path);
-                }
-                catch (IOException)
-                {
-                    this.StatusText = string.Format(Properties.Resources.FailedScreenshotStatusTextFormat, path);
-                }
-            }
-        }
-
-        /// <summary>
-        /// #################      Handles the color frame data arriving from the sensor    ########################
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void Reader_ColorFrameArrived(object sender, ColorFrameArrivedEventArgs e)
-        {
-            // ColorFrame is IDisposable
-            using (ColorFrame colorFrame = e.FrameReference.AcquireFrame())
-            {
-                if (colorFrame != null)
-                {
-                    FrameDescription colorFrameDescription = colorFrame.FrameDescription;
-
-                    using (KinectBuffer colorBuffer = colorFrame.LockRawImageBuffer())
-                    {
-                        this.colorBitmap.Lock();
-
-                        // verify data and write the new color frame data to the display bitmap
-                        if ((colorFrameDescription.Width == this.colorBitmap.PixelWidth) && (colorFrameDescription.Height == this.colorBitmap.PixelHeight))
-                        {
-                            colorFrame.CopyConvertedFrameDataToIntPtr(
-                                this.colorBitmap.BackBuffer,
-                                (uint)(colorFrameDescription.Width * colorFrameDescription.Height * 4),
-                                ColorImageFormat.Bgra);
-
-                            this.colorBitmap.AddDirtyRect(new Int32Rect(0, 0, this.colorBitmap.PixelWidth, this.colorBitmap.PixelHeight));
-                        }
-
-                        this.colorBitmap.Unlock();
-                    }
-                }
-            }
-        }
-
-
-
-
-        /// <summary>
-        /// #####################       Handles the body frame data arriving from the sensor    #######################
+        /// Handles the body frame data arriving from the sensor
         /// </summary>
         /// <param name="sender">object sending the event</param>
         /// <param name="e">event arguments</param>
         private void Reader_FrameArrived(object sender, BodyFrameArrivedEventArgs e)
         {
             bool dataReceived = false;
-
 
             using (BodyFrame bodyFrame = e.FrameReference.AcquireFrame())
             {
@@ -305,14 +323,12 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 using (DrawingContext dc = this.drawingGroup.Open())
                 {
+                    // Draw a transparent background to set the render size
+                    dc.DrawRectangle(Brushes.Black, null, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
 
-                    dc.DrawImage(colorBitmap, new Rect(0.0, 0.0, this.displayWidth, this.displayHeight));
                     int penIndex = 0;
-
                     foreach (Body body in this.bodies)
                     {
-                        Return_Exercise(body, dc);
-
                         Pen drawPen = this.bodyColors[penIndex++];
 
                         if (body.IsTracked)
@@ -324,6 +340,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             // convert the joint points to depth (display) space
                             Dictionary<JointType, Point> jointPoints = new Dictionary<JointType, Point>();
 
+                            
                             foreach (JointType jointType in joints.Keys)
                             {
                                 // sometimes the depth(Z) of an inferred joint may show as negative
@@ -486,29 +503,19 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             }
         }
 
-        /// <summary>
-        /// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
-        /// </summary>
-        /// <param name="sender">object sending the event</param>
-        /// <param name="e">event arguments</param>
-        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
-        {
-            // on failure, set the status text
-            this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
-                                                            : Properties.Resources.SensorNotAvailableStatusText;
-        }
-        #endregion
 
-        #region Methods
-        // Add exersise generics
+        // Add exersise generics 
 
 
         //asume joint2 is the common joint, #todo add error checking
         //use cosine rule to find angle at joint 2
 
+
+
+
         /// <summary>
         /// Calculates angle of seperation between joint1 and 2 and joint2 and 3.
-        /// in radians
+        /// in radians 
         /// </summary>
         public double getAngleOfSeparation(Body body, JointType joint1, JointType joint2, JointType joint3)
         {
@@ -517,11 +524,11 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             double b = lengthBetweenJoints(body, joint1, joint2);
             double c = lengthBetweenJoints(body, joint1, joint3);
 
-            return Math.Acos((a * a + b * b - c * c) / (2 * a * b)) * 180 / Math.PI;
+            return Math.Acos((a * a + b * b - c * c) / (2 * a * b));
         }
 
         /// <summary>
-        /// Calculates length between two joints.
+        /// Calculates length between two joints. 
         /// </summary>
         public double lengthBetweenJoints(Body body, JointType joint1, JointType joint2)
         {
@@ -535,175 +542,52 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         }
 
         /// <summary>
-        /// Returns true is spine is strate within tolerance.
+        /// Returns true is spine is strate within tolerance. 
         /// </summary>
         public Boolean isSpineStraight(Body body, double tolerance)
         {
-            //fix this
+            //fix this 
             // neck,spineshoulder,spineMid,spineBase
-            return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid)) ||
-                   tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid, JointType.SpineBase));
+            return tolerance < getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid) ||
+                   tolerance < getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid,JointType.SpineBase);
 
 
         }
 
         /// <summary>
-        /// Returns true is neck is strate within tolerance.
+        /// Returns true is neck is strate within tolerance. 
         /// </summary>
         public Boolean isNeckStraight(Body body, double tolerance)
         {
             // head,neck,spineShoulder
-            return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Head, JointType.Neck, JointType.SpineShoulder));
+            return tolerance < getAngleOfSeparation(body, JointType.Head, JointType.Neck, JointType.SpineShoulder);
+
 
         }
-        #endregion
 
-        #region Modes
-        private void Exercise_1(object sender, RoutedEventArgs e)
+
+
+
+
+
+
+
+
+
+
+
+
+
+        /// <summary>
+        /// Handles the event which the sensor becomes unavailable (E.g. paused, closed, unplugged).
+        /// </summary>
+        /// <param name="sender">object sending the event</param>
+        /// <param name="e">event arguments</param>
+        private void Sensor_IsAvailableChanged(object sender, IsAvailableChangedEventArgs e)
         {
-            _mode = Mode.Exercise_1;
+            // on failure, set the status text
+            this.StatusText = this.kinectSensor.IsAvailable ? Properties.Resources.RunningStatusText
+                                                            : Properties.Resources.SensorNotAvailableStatusText;
         }
-
-        private void Exercise_2(object sender, RoutedEventArgs e)
-        {
-            _mode = Mode.Exercise_2;
-        }
-
-        private void Exercise_3(object sender, RoutedEventArgs e)
-        {
-            _mode = Mode.Exercise_3;
-        }
-
-        private void Exercise_4(object sender, RoutedEventArgs e)
-        {
-            _mode = Mode.Exercise_4;
-        }
-        private void Return(object sender, RoutedEventArgs e)
-        {
-            _mode = Mode.Return;
-        }
-        #endregion
-
-        void Return_Exercise(Body body, DrawingContext dc)
-        {
-            if (_mode == Mode.Exercise_1)
-            {
-                //for testing remove at some point
-                double startAngle = 105;
-                double endAngle = 178;
-                double angleTolerance = 3;
-                double armTolerance = 12;
-
-                //end when function returns 1
-                int exersiseCode = Exersise.moveLeftArm(body, angleTolerance, armTolerance, startAngle, endAngle);
-                if (exersiseCode != -72)
-                {
-                    Console.WriteLine(exersiseCode);
-                    switch (exersiseCode)
-                    {
-                        case -1:
-                            //todo function fix spine
-                            spineMsg.Visibility = System.Windows.Visibility.Visible;
-                            break;
-                        case -2:
-                            armMsg.Visibility = System.Windows.Visibility.Visible;
-                            //todo function straighten arm
-                            break;
-                        case -100:
-                            spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            Tuple<Point, Point> startPoints = Exersise.printStartProjection(body, startAngle);
-                            dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
-                            //while (true) { Console.WriteLine("i hate git"); }
-                            break;
-                        case 1:
-                            //todo end the exersise, say well done and all that good stuff
-                            spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            endMsg.Visibility = System.Windows.Visibility.Visible;
-                            break;
-                        case -45:
-                            //todo mkmsg to rase arm
-                            Tuple<Point, Point> endPoints = Exersise.printEndProjection(body, endAngle);
-                            dc.DrawLine(new Pen(Brushes.Blue, 13), endPoints.Item1, endPoints.Item2);
-                            break;
-                        case 0:
-                            spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                            break;
-
-                    }
-                }
-            }
-            if (_mode == Mode.Exercise_2)
-                {
-                    //crowbar ex2 in here 
-                    double startAngle = 105;
-                    double endAngle = 178;
-                    double angleTolerance = 3;
-                    double armTolerance = 12;
-                    int exersise2Code = Exersise2.moveRightArm(body, angleTolerance, armTolerance, startAngle, endAngle);
-                    if (exersise2Code != -72)
-                    {
-                        Console.WriteLine(exersise2Code);
-                        switch (exersise2Code)
-                        {
-                            case -1:
-                                //todo function fix spine
-                                spineMsg.Visibility = System.Windows.Visibility.Visible;
-                                break;
-                            case -2:
-                                armMsg.Visibility = System.Windows.Visibility.Visible;
-                                //todo function straighten arm
-                                break;
-                            case -100:
-                                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                Tuple<Point, Point> startPoints = Exersise2.printStartProjection(body, startAngle);
-                                dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
-                                //while (true) { Console.WriteLine("i hate git"); }
-                                break;
-                            case 1:
-                                //todo end the exersise, say well done and all that good stuff
-                                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                endMsg.Visibility = System.Windows.Visibility.Visible;
-                                break;
-                            case -45:
-                                //todo mkmsg to rase arm
-                                Tuple<Point, Point> endPoints = Exersise2.printEndProjection(body, endAngle);
-                                dc.DrawLine(new Pen(Brushes.Red, 13), endPoints.Item1, endPoints.Item2);
-                                break;
-                            case 0:
-                                spineMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                armMsg.Visibility = System.Windows.Visibility.Collapsed;
-                                break;
-
-                        }
-                    }
-                }
-                if (_mode == Mode.Exercise_3)
-                {
-                    return;
-                }
-                if (_mode == Mode.Exercise_4)
-                {
-                    return;
-                }
-                if (_mode == Mode.Return)
-                {
-                    return;
-                }
-            }
-
-        public enum Mode
-        {
-            Exercise_1,
-            Exercise_2,
-            Exercise_3,
-            Exercise_4,
-            Return,
-        }
-
     }
 }
