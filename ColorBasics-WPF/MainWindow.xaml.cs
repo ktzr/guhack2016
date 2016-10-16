@@ -539,9 +539,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// </summary>
         public Boolean isSpineStraight(Body body, double tolerance)
         {
-            //fix this
-            // neck,spineshoulder,spineMid,spineBase
-            return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid)) ||
+              return tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.Neck, JointType.SpineShoulder, JointType.SpineMid)) ||
                    tolerance < Math.Abs(180 - getAngleOfSeparation(body, JointType.SpineShoulder, JointType.SpineMid, JointType.SpineBase));
 
 
@@ -591,8 +589,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         {
             if (_mode == Mode.Exercise_1)
             {
-                // Console.WriteLine("BAR");
-                //for testing remove at some point
+                if (exersice1Arm1 && exersice1Arm2)
+                {
+                    exersice1Arm1 = false;
+                    exersice1Arm2 = false;
+                    _mode = Mode.Return;
+                }
+
+                
                 double startAngle = 105;
                 double endAngle = 110;
                 double angleTolerance = 3;
@@ -602,26 +606,22 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 int exersiseCode = Exersise.moveLeftArm(body, angleTolerance, armTolerance, startAngle, endAngle);
                 if (exersiseCode != -72)
                 {
-                    Console.WriteLine(exersiseCode);
                     switch (exersiseCode)
                     {
                         case -1:
-                            //todo function fix spine
                             spineMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -2:
                             larmMsg.Visibility = System.Windows.Visibility.Visible;
-                            //todo function straighten arm
                             break;
                         case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                             larmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             Tuple<Point, Point> startPoints = Exersise.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
-                            //while (true) { Console.WriteLine("i hate git"); }
                             break;
                         case 1:
-                            //todo end the exersise, say well done and all that good stuff
+                            //ends the exersise, say well done and all that good stuff
                             spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                             larmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
@@ -629,7 +629,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
 
                             break;
                         case -45:
-                            //todo mkmsg to rase arm
                             Tuple<Point, Point> endPoints = Exersise.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), endPoints.Item1, endPoints.Item2);
                             break;
@@ -646,33 +645,27 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 int exersise2Code = Exersise1Part2.moveRightArm(body, angleTolerance, armTolerance, startAngle, endAngle);
                 if (exersise2Code != -72)
                 {
-                    Console.WriteLine(exersise2Code);
                     switch (exersise2Code)
                     {
                         case -1:
-                            //todo function fix spine
                             spineMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -2:
                             rarmMsg.Visibility = System.Windows.Visibility.Visible;
-                            //todo function straighten arm
                             break;
                         case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                             rarmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             Tuple<Point, Point> startPoints = Exersise1Part2.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Red, 13), startPoints.Item1, startPoints.Item2);
-                            //while (true) { Console.WriteLine("i hate git"); }
                             break;
                         case 1:
-                            //todo end the exersise, say well done and all that good stuff
                             spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                             rarmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
                             exersice1Arm2 = false;
                             break;
                         case -45:
-                            //todo mkmsg to rase arm
                             Tuple<Point, Point> endPoints = Exersise1Part2.printEndProjection(body, endAngle);
                             dc.DrawLine(new Pen(Brushes.Red, 13), endPoints.Item1, endPoints.Item2);
                             break;
@@ -683,12 +676,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     }
 
                 }
-                if (exersice1Arm1 && exersice1Arm2)
-                {
-                    exersice1Arm1 = true;
-                    exersice1Arm2 = true;
-                    _mode = Mode.Return;
-                }
+               
 
             }
             if (_mode == Mode.Exercise_2)
@@ -700,11 +688,9 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 int exersise2op = Exersise2.bendLeftArm(body, angleTolerance, armTolerance);
                 if (exersise2op != -72)
                 {
-                    Console.WriteLine(exersise2op);
                     switch (exersise2op)
                     {
                         case -1:
-                            //todo function fix spine
                             spineMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -100:
@@ -712,17 +698,14 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             larmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             Tuple<Point, Point> startPoints = Exersise2.printStartProjection(body);
                             dc.DrawLine(new Pen(Brushes.Green, 13), startPoints.Item1, startPoints.Item2);
-                            //while (true) { Console.WriteLine("i hate git"); }
                             break;
                         case 1:
-                            //todo end the exersise, say well done and all that good stuff
                             spineMsg.Visibility = System.Windows.Visibility.Collapsed;
                             larmMsg.Visibility = System.Windows.Visibility.Collapsed;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
                             _mode = Mode.Return;
                             break;
                         case -45:
-                            //todo mkmsg to rase arm
                             Tuple<Point, Point, Point, Point> endPoints = Exersise2.printEndProjection(body);
                             dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item1, endPoints.Item2);
                             dc.DrawLine(new Pen(Brushes.Green, 13), endPoints.Item3, endPoints.Item4);

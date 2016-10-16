@@ -54,13 +54,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// </summary>
         public static Boolean isSraight(Body body, double tolerance, JointType joint1, JointType joint2, JointType joint3)
         {
-            Console.Write(tolerance);
-            Console.Write(">");
-            Console.Write(Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
-            Console.Write("\n");
-
-
-            Console.WriteLine(tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3)));
             return tolerance > Math.Abs(180 - getAngleOfSeparation(body, joint1, joint2, joint3));
 
 
@@ -138,11 +131,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -2;
             }
-            //todo promp to go to end angle  (draw box/line showing where arm should be)
+            //draw box/line showing where arm should be
             if (Exersise.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderLeft, ElbowLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
-                //todo congradulate
                 return 1;
             }
             if (Exersise.hasStarted)
@@ -241,11 +233,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
             {
                 return -2;
             }
-            //todo promp to go to end angle  (draw box/line showing where arm should be)
+            // (draw box/line showing where arm should be)
             if (Exersise1Part2.hasStarted && CheckBodyForm.isAtAngle(body, tolerance, endAngle, SpineShoulder, ShoulderRight, ElbowRight) &&
                 body.Joints[WristRight].Position.Y > body.Joints[ShoulderRight].Position.Y)
             {
-                //todo congradulate
                 return 1;
             }
             if (Exersise1Part2.hasStarted)
@@ -346,7 +337,6 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 CheckBodyForm.isAtAngle(body, tolerance, 90, ShoulderLeft, ElbowLeft, WristLeft) &&
                 body.Joints[WristLeft].Position.Y > body.Joints[ShoulderLeft].Position.Y)
             {
-                //todo congradulate
                 return 1;
             }
             if (hasStarted)
