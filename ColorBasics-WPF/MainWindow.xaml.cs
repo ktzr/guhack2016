@@ -426,7 +426,7 @@ namespace Microsoft.Samples.Kinect.ColorBasics
         /// <param name="handState">state of the hand</param>
         /// <param name="handPosition">position of the hand</param>
         /// <param name="drawingContext">drawing context to draw to</param>
-        private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
+        ///private void DrawHand(HandState handState, Point handPosition, DrawingContext drawingContext)
         {
             switch (handState)
             {
@@ -597,10 +597,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                 }
 
                 
-                double startAngle = 105;
+                double startAngle = 110;
                 double endAngle = 110;
                 double angleTolerance = 3;
-                double armTolerance = 12;
+                double armTolerance = 15;
 
                 //end when function returns 1
                 int erxerciseCode = Exercise.moveLeftArm(body, angleTolerance, armTolerance, startAngle, endAngle);
@@ -609,24 +609,23 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     switch (erxerciseCode)
                     {
                         case -1:
-                            spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            //spineMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -2:
-                            larmMsg.Visibility = System.Windows.Visibility.Visible;
+                            //larmMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
-                        case -100:
+                        /*case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
                             larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             Tuple<Point, Point> startPoints = Exercise.printStartProjection(body, startAngle);
                             dc.DrawLine(new Pen(Brushes.Blue, 13), startPoints.Item1, startPoints.Item2);
-                            break;
+                            break;*/
                         case 1:
                             //ends the erxercise, say well done and all that good stuff
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
                             larmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
                             exercise1Arm1 = true;
-
                             break;
                         case -45:
                             Tuple<Point, Point> endPoints = Exercise.printEndProjection(body, endAngle);
@@ -648,10 +647,10 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                     switch (erxercise2Code)
                     {
                         case -1:
-                            spineMsg.Visibility = System.Windows.Visibility.Visible;
+                            //spineMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -2:
-                            rarmMsg.Visibility = System.Windows.Visibility.Visible;
+                            //rarmMsg.Visibility = System.Windows.Visibility.Visible;
                             break;
                         case -100:
                             spineMsg.Visibility = System.Windows.Visibility.Hidden;
@@ -660,8 +659,8 @@ namespace Microsoft.Samples.Kinect.ColorBasics
                             dc.DrawLine(new Pen(Brushes.Red, 13), startPoints.Item1, startPoints.Item2);
                             break;
                         case 1:
-                            spineMsg.Visibility = System.Windows.Visibility.Hidden;
-                            rarmMsg.Visibility = System.Windows.Visibility.Hidden;
+                            //spineMsg.Visibility = System.Windows.Visibility.Hidden;
+                            //rarmMsg.Visibility = System.Windows.Visibility.Hidden;
                             endMsg.Visibility = System.Windows.Visibility.Visible;
                             exercise1Arm2 = true;
                             break;

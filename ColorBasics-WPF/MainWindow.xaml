@@ -55,9 +55,9 @@
             </Viewbox>
         </Canvas>
 
-        <Image Grid.Row="0" HorizontalAlignment="Left"  Source="Images\stroke.png" Stretch="Fill" Width="358" Margin="3,14,0,874" />
+        <Image Grid.Row="0" HorizontalAlignment="Left"  Source="Images\stroke.png" Stretch="Fill" Width="242" Margin="3,14,0,945" />
 
-        <TextBlock Name="spineMsg" Margin="698,60,644,1006" FontWeight="Black" FontSize="50" Visibility="Hidden" Grid.ColumnSpan="2">Straighten your spine</TextBlock>
+        <TextBlock Name="spineMsg" Margin="698,60,644,1006"  Background="Transparent" FontWeight="Black" FontSize="50" Visibility="Hidden" Grid.ColumnSpan="2">Straighten your spine</TextBlock>
         <TextBlock Name="larmMsg"  Margin="10,184,503,881" FontWeight="Black" FontSize="50" Visibility="Hidden">Straighten your left arm</TextBlock>
         <TextBlock Name="rarmMsg" Margin="107,184,12,881" FontWeight="Black" FontSize="50" Visibility="Hidden" Grid.Column="1">Straighten your right arm</TextBlock>
         <TextBlock Name="endMsg" Margin="710,148,655,860" FontSize="100" FontWeight ="Black" Visibility="Hidden" Grid.ColumnSpan="2">Well done!</TextBlock>
